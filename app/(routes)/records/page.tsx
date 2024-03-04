@@ -1,3 +1,4 @@
+import DatePickerBar from "@/app/ui/datePickerBar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function Page() {
@@ -10,7 +11,7 @@ export default async function Page() {
           <TabsTrigger value="calendarView">行事曆</TabsTrigger>
         </TabsList>
         <TabsContent value="listView">
-          Make changes to your account here.
+          <DatePickerBar />
         </TabsContent>
         <TabsContent value="calendarView">
           Change your password here.
