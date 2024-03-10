@@ -21,7 +21,11 @@ export default function SideNav() {
       <div className="md:mb-2 flex h-15 items-center justify-between rounded-md bg-blue-600 p-2 md:h-20">
         <div className="flex justify-center items-center md:hidden">
           <Button size="icon" onClick={() => setIsNavLinkShow((prev) => !prev)}>
-            {isNavShow ? <XMarkIcon /> : <Bars4Icon />}
+            {isNavShow ? (
+              <XMarkIcon className="w-10 h-10" />
+            ) : (
+              <Bars4Icon className="w-10 h-10" />
+            )}
           </Button>
         </div>
         <div>

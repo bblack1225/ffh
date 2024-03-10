@@ -1,16 +1,33 @@
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+"use client";
+import { useState } from "react";
+import CalendarHeader from "./CalendarHeader";
 
 export default function DatePickerBar() {
+  const [year, setYear] = useState(2024);
+  const [month, setMonth] = useState(1);
+
+  const handlePrevMonth = () => {
+    // 實作更新月份和年份的邏輯
+    const lastMonth = month === 1 ? 12 : month - 1;
+    setMonth(lastMonth);
+    const lastYear = month === 1 ? year - 1 : year;
+    setYear(lastYear);
+  };
+
+  const handleNextMonth = () => {
+    // 實作更新月份和年份的邏輯
+    const nextMonth = month === 12 ? 1 : month + 1;
+    setMonth(nextMonth);
+    const nextYear = month === 12 ? year + 1 : year;
+    setYear(nextYear);
+  };
+
   return (
-    <div className="flex flex-row justify-between items-center bg-slate-100 bg-background rounded-md">
-      <Button variant="ghost" size="icon" className="active:bg-slate-200">
-        <ChevronLeftIcon className="h-4 w-4" />
-      </Button>
-      <div>date</div>
-      <Button variant="ghost" size="icon" className="active:bg-slate-200">
-        <ChevronRightIcon className="h-4 w-4" />
-      </Button>
-    </div>
+    <CalendarHeader
+      year={year}
+      month={month}
+      onPrevMonth={handlePrevMonth}
+      onNextMonth={handleNextMonth}
+    />
   );
 }
