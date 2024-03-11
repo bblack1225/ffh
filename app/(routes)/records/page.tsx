@@ -14,7 +14,7 @@ export default async function Page() {
           <DatePickerBar />
         </TabsContent>
         <TabsContent value="calendarView">
-          Change your password here.
+          <DatePickerBar />
         </TabsContent>
       </Tabs>
     </div>
