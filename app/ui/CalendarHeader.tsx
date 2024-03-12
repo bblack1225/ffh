@@ -70,55 +70,58 @@ export default function CalendarHeader({
     setIsDetailShow(false);
   };
   return (
-    <div className="flex items-center justify-between mb-4 w-full bg-slate-100 relative">
-      <div className="flex items-center">
-        <button
-          className=" active:bg-slate-200 text-gray-800 font-bold py-2 px-3 rounded-l"
-          onClick={() => handleChangeMonth(month - 1)}
+    <div className="flex flex-col  justify-between mb-4 w-full ">
+      <div className="flex bg-slate-100 ">
+        <div>
+          <Button
+            variant="ghost"
+            className=" active:bg-slate-200 text-gray-800 font-bold py-2 px-3 rounded-l"
+            onClick={() => handleChangeMonth(month - 1)}
+          >
+            <ChevronLeftIcon className="h-6 w-6" />
+          </Button>
+        </div>
+        <div
+          className="flex items-center justify-center flex-1"
+          onClick={() => setIsDetailShow((prev) => !prev)}
         >
-          <ChevronLeftIcon className="h-6 w-6" />
-        </button>
-      </div>
-      <div
-        className="relative"
-        onClick={() => setIsDetailShow((prev) => !prev)}
-      >
-        <Button variant="ghost" className="text-md p-1">
           {`${year}年`}
-        </Button>
-        <Button variant="ghost" className="text-md p-1">
           {`${month}月`}
-        </Button>
+        </div>
+        <div>
+          <Button
+            variant="ghost"
+            className=" active:bg-slate-200 text-gray-800 font-bold py-2 px-3 rounded-r"
+            onClick={() => handleChangeMonth(month + 1)}
+          >
+            <ChevronRightIcon className="h-6 w-6 " />
+          </Button>
+        </div>
       </div>
-
-      <button
-        className=" active:bg-slate-200 text-gray-800 font-bold py-2 px-3 rounded-r"
-        onClick={() => handleChangeMonth(month + 1)}
-      >
-        <ChevronRightIcon className="h-6 w-6 " />
-      </button>
       <div
-        className={clsx(`absolute top-10 z-50 w-80 pt-2 ml-4`, {
+        className={clsx(`flex min-[520px]:justify-center`, {
           hidden: !isDetailShow,
         })}
       >
-        <div className="inline-block rounded-lg w-full bg-white shadow-lg">
+        <div className="inline-block rounded-lg w-full min-[520px]:w-96 bg-white shadow-lg">
           <div className="flex justify-between">
-            <button
+            <Button
+              variant="ghost"
               className=" active:bg-slate-200 text-gray-800 font-bold py-2 px-3 rounded-l"
               onClick={() => onYearChange(-1)}
             >
               <ChevronLeftIcon className="h-6 w-6" />
-            </button>
+            </Button>
             <div className="  text-gray-800 font-bold py-2 px-3 rounded-l">
               {year}
             </div>
-            <button
+            <Button
+              variant="ghost"
               className=" active:bg-slate-200 text-gray-800 font-bold py-2 px-3 rounded-r"
               onClick={() => onYearChange(1)}
             >
               <ChevronRightIcon className="h-6 w-6" />
-            </button>
+            </Button>
           </div>
           <div className="flex-1">
             <div className="grid  grid-cols-4">
