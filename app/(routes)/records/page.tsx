@@ -11,10 +11,10 @@ export default async function Page() {
           <TabsTrigger value="calendarView">行事曆</TabsTrigger>
         </TabsList>
         <TabsContent value="listView">
-          <DatePickerBar />
+          <DatePickerBar view="list" />
         </TabsContent>
         <TabsContent value="calendarView">
-          <DatePickerBar />
+          <DatePickerBar view="calendar" />
         </TabsContent>
       </Tabs>
     </div>
