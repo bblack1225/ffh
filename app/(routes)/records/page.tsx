@@ -1,8 +1,7 @@
-import DatePickerBar from "@/app/ui/datePickerBar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MainContent from "@/app/ui/records/mainContent";
 import Link from "next/link";
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className="bg-background">
       <div className="flex items-center justify-between">
@@ -14,18 +13,7 @@ export default async function Page() {
           新增紀錄
         </Link>
       </div>
-      <Tabs defaultValue="listView" className="w-full mt-2">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="listView">清單</TabsTrigger>
-          <TabsTrigger value="calendarView">行事曆</TabsTrigger>
-        </TabsList>
-        <TabsContent value="listView">
-          <DatePickerBar view="list" />
-        </TabsContent>
-        <TabsContent value="calendarView">
-          <DatePickerBar view="calendar" />
-        </TabsContent>
-      </Tabs>
+      <MainContent />
     </div>
   );
 }
