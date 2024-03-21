@@ -1,0 +1,18 @@
+{
+  "id": "mig_cngv5ds5ko6018g4ocdg",
+  "parentID": "mig_cngv2ps0q3a2effs5vb0",
+  "checksum": "1:0942ab8eff3477a8d919fb93c121ac753a5f3c5b7966553efc3c4c08f74c83db",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "share",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "1000"
+        },
+        "table": "member"
+      }
+    }
+  ]
+}

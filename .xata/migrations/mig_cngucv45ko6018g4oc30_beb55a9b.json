@@ -1,0 +1,18 @@
+{
+  "id": "mig_cngucv45ko6018g4oc30",
+  "parentID": "mig_cngucoc5ko6018g4oc20",
+  "checksum": "1:beb55a9b808c5d0aa5cfaf53859bf0d9c5d9baa3ca3ddbf7ad18bf5a3ab1b26b",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "name",
+          "type": "string",
+          "notNull": true,
+          "defaultValue": ""
+        },
+        "table": "member"
+      }
+    }
+  ]
+}

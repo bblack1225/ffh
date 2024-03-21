@@ -1,0 +1,19 @@
+{
+  "id": "mig_cngvre45ko6018g4oct0",
+  "parentID": "mig_cngvqqk0q3a2effs5vig",
+  "checksum": "1:db23601a883225433ec7b29f9060af04209c662b57fc05f4e731dc4585be0b91",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "book_id",
+          "type": "link",
+          "link": {
+            "table": "accounting_book"
+          }
+        },
+        "table": "transaction_record"
+      }
+    }
+  ]
+}

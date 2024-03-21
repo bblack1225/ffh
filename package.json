@@ -11,10 +11,11 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
+    "@mantine/hooks": "^7.6.2",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
-    "@xata.io/client": "^0.29.2",
+    "@xata.io/client": "^0.29.3",
     "@xata.io/drizzle": "^0.0.18",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

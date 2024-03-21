@@ -1,0 +1,11 @@
+{
+  "id": "mig_cngt7prfqmjcsbc0k8q0",
+  "checksum": "1:a5127ee9da8dbd6e0091964c510fac8a9f438edd45b4992fdbdda4c63ebcc20e",
+  "operations": [
+    {
+      "addTable": {
+        "table": "accounting_book"
+      }
+    }
+  ]
+}

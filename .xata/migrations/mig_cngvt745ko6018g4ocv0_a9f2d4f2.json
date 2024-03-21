@@ -1,0 +1,16 @@
+{
+  "id": "mig_cngvt745ko6018g4ocv0",
+  "parentID": "mig_cngvrq45ko6018g4ocu0",
+  "checksum": "1:a9f2d4f2845698d64609f825e6ad01146e322a6acf467bf2585bdd11298969cc",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "images",
+          "type": "file[]"
+        },
+        "table": "transaction_record"
+      }
+    }
+  ]
+}

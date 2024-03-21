@@ -1,0 +1,12 @@
+{
+  "id": "mig_cngtivs5ko6018g4obp0",
+  "parentID": "mig_cngtiuc5ko6018g4obng",
+  "checksum": "1:b3f611bbaa59ceccdfb6c5f2e458e9e52863b714d8e8d3c29476d0dc9f6ca210",
+  "operations": [
+    {
+      "addTable": {
+        "table": "transaction_record"
+      }
+    }
+  ]
+}

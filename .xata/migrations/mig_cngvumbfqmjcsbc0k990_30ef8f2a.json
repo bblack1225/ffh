@@ -1,0 +1,16 @@
+{
+  "id": "mig_cngvumbfqmjcsbc0k990",
+  "parentID": "mig_cngvuk3fqmjcsbc0k980",
+  "checksum": "1:30ef8f2ae74bf2a91170b31a68feeb577dedc5be70b5e7e9087d832c7cd95573",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "content",
+          "type": "text"
+        },
+        "table": "comments"
+      }
+    }
+  ]
+}

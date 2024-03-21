@@ -1,0 +1,16 @@
+{
+  "id": "mig_cngucoc5ko6018g4oc20",
+  "parentID": "mig_cngubh45ko6018g4oc10",
+  "checksum": "1:2786c653fd3c93a4ece991f432514442c00bbb25b3053036fe479876a2dbad2e",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "pin",
+          "type": "string"
+        },
+        "table": "accounting_book"
+      }
+    }
+  ]
+}

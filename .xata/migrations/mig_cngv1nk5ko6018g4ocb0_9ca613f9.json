@@ -1,0 +1,13 @@
+{
+  "id": "mig_cngv1nk5ko6018g4ocb0",
+  "parentID": "mig_cngv1bk5ko6018g4oca0",
+  "checksum": "1:9ca613f942ffa35a3b95a0622debd51a92ac31cace25e9adbb1d807f96e33916",
+  "operations": [
+    {
+      "removeColumn": {
+        "column": "book_id",
+        "table": "member"
+      }
+    }
+  ]
+}

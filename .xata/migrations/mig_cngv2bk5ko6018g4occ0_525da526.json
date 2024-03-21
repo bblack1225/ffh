@@ -1,0 +1,19 @@
+{
+  "id": "mig_cngv2bk5ko6018g4occ0",
+  "parentID": "mig_cngv1nk5ko6018g4ocb0",
+  "checksum": "1:525da526b2f3ea2fa8f55b7e6f881c0788678fac24a549e1669c14bc4913b618",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "book_id",
+          "type": "link",
+          "link": {
+            "table": "accounting_book"
+          }
+        },
+        "table": "member"
+      }
+    }
+  ]
+}

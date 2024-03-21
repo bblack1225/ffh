@@ -1,0 +1,18 @@
+{
+  "id": "mig_cngubh45ko6018g4oc10",
+  "parentID": "mig_cngtivs5ko6018g4obp0",
+  "checksum": "1:7396520f747924dc951a3cb885763cfff860f435eb4aab6b67c1b4ab2b8dc8f0",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "name",
+          "type": "string",
+          "notNull": true,
+          "defaultValue": "default_name"
+        },
+        "table": "accounting_book"
+      }
+    }
+  ]
+}

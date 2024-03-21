@@ -1,0 +1,17 @@
+{
+  "id": "mig_cnnvmm8kbulmapnngv60",
+  "parentID": "mig_cngvv0k5ko6018g4od3g",
+  "checksum": "1:cd0eda0d07189b76bdb5340e4e08b7644d0aaafc1466e34eed139c81aa9ac72c",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "type",
+          "type": "string",
+          "defaultValue": "expense"
+        },
+        "table": "transaction_record"
+      }
+    }
+  ]
+}

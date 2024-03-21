@@ -1,0 +1,12 @@
+{
+  "id": "mig_cngtiuc5ko6018g4obng",
+  "parentID": "mig_cngtiobfqmjcsbc0k90g",
+  "checksum": "1:6c0b9273e7c1ca3889ab2e52890d4f9802ab47e8488a42cb94334f7f3cec9050",
+  "operations": [
+    {
+      "addTable": {
+        "table": "transaction_category"
+      }
+    }
+  ]
+}

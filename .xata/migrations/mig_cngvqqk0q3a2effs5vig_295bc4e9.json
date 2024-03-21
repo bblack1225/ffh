@@ -1,0 +1,13 @@
+{
+  "id": "mig_cngvqqk0q3a2effs5vig",
+  "parentID": "mig_cngvqfc5ko6018g4ocs0",
+  "checksum": "1:295bc4e95fa22e72c469c67651a54d08ac9b28867e15ee1d1101e9fddceb1c86",
+  "operations": [
+    {
+      "removeColumn": {
+        "column": "member_id",
+        "table": "transaction_category"
+      }
+    }
+  ]
+}

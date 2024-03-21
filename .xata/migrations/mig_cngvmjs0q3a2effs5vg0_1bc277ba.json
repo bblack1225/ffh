@@ -1,0 +1,18 @@
+{
+  "id": "mig_cngvmjs0q3a2effs5vg0",
+  "parentID": "mig_cngvmbc5ko6018g4ocjg",
+  "checksum": "1:1bc277ba8593e5a963c89d7880fffd997cad5b34e2c448a238140b611f74775d",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "icon",
+          "type": "string",
+          "notNull": true,
+          "defaultValue": "\"\""
+        },
+        "table": "transaction_category"
+      }
+    }
+  ]
+}

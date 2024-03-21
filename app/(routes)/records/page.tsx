@@ -1,7 +1,11 @@
 import MainContent from "@/app/ui/records/mainContent";
+import { fetchAllMembers } from "@/lib/members/data";
 import Link from "next/link";
 
-export default function Page() {
+export default async function Page() {
+  const data = await fetchAllMembers();
+  console.log("data", data);
+
   return (
     <div className="bg-background">
       <div className="flex items-center justify-between">

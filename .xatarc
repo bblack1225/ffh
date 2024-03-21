@@ -1,6 +1,6 @@
 {
   "databaseURL": "https://bblack1225-s-workspace-aq67no.ap-southeast-2.xata.sh/db/ffh",
   "codegen": {
-    "output": "/xata.ts"
+    "output": "utils/xata.ts"
   }
 }
