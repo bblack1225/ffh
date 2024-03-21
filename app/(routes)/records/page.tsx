@@ -1,10 +1,11 @@
 import MainContent from "@/app/ui/records/mainContent";
+import fetchCategoriesByType from "@/lib/category/data";
 import { fetchAllMembers } from "@/lib/members/data";
 import Link from "next/link";
 
 export default async function Page() {
   const data = await fetchAllMembers();
-  console.log("data", data);
+  const category = await fetchCategoriesByType("OUT");
 
   return (
     <div className="bg-background">
