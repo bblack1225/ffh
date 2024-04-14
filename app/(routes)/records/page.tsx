@@ -4,8 +4,8 @@ import { fetchAllMembers } from "@/lib/members/data";
 import Link from "next/link";
 
 export default async function Page() {
-  const data = await fetchAllMembers();
-  const category = await fetchCategoriesByType("OUT");
+  // const data = await fetchAllMembers();
+  // const category = await fetchCategoriesByType("OUT");
 
   return (
     <div className="bg-background">

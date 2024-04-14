@@ -1,3 +1,4 @@
+import ExpenseCreateForm from "@/app/ui/records/create/expenseForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function Page() {
@@ -18,7 +19,9 @@ export default function Page() {
           </TabsList>
         </div>
         <TabsContent value="income"></TabsContent>
-        <TabsContent value="expense"></TabsContent>
+        <TabsContent value="expense">
+          <ExpenseCreateForm />
+        </TabsContent>
       </Tabs>
     </div>
   );
