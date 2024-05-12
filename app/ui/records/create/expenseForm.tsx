@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -9,8 +10,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CategoryTable, MemberTable } from "@/lib/definitions";
+import { TransactionCategoryRecord } from "@/utils/xata";
+import { JSONData } from "@xata.io/client";
 
-export default function ExpenseCreateForm() {
+type Props = {
+  categories: CategoryTable[];
+  members: MemberTable[];
+};
+
+export default function ExpenseCreateForm({ categories, members }: Props) {
   return (
     <form>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -48,9 +57,11 @@ export default function ExpenseCreateForm() {
                   <SelectValue placeholder="選擇支出類別" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">飲食</SelectItem>
-                  <SelectItem value="dark">食材</SelectItem>
-                  <SelectItem value="system">水電費</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </SelectGroup>
             </Select>
@@ -80,13 +91,18 @@ export default function ExpenseCreateForm() {
                   <SelectValue placeholder="選擇成員" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                  {members.map((member) => (
+                    <SelectItem key={member.id} value={member.id}>
+                      {member.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </SelectGroup>
             </Select>
           </div>
+        </div>
+        <div className="flex justify-end mt-3">
+          <Button type="submit">儲存</Button>
         </div>
       </div>
     </form>

@@ -1,7 +1,12 @@
 import ExpenseCreateForm from "@/app/ui/records/create/expenseForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { fetchAllCategories } from "@/lib/category/data";
+import { fetchAllMembers } from "@/lib/members/data";
 
-export default function Page() {
+export default async function Page() {
+  const members = await fetchAllMembers();
+  const { inCategories, outCategories } = await fetchAllCategories();
+
   return (
     <div className="bg-background">
       <Tabs defaultValue="expense">
@@ -20,7 +25,7 @@ export default function Page() {
         </div>
         <TabsContent value="income"></TabsContent>
         <TabsContent value="expense">
-          <ExpenseCreateForm />
+          <ExpenseCreateForm categories={outCategories} members={members} />
         </TabsContent>
       </Tabs>
     </div>

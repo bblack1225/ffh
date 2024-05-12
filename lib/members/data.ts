@@ -8,10 +8,10 @@ const xata = getXataClient();
 
 const member = pgTable("member", {
   id: text("id").primaryKey(),
-  name: text("name"),
-  book_id: text("book_id"),
-  email: text("email"),
-  share: integer("share"),
+  name: text("name").notNull(),
+  book_id: text("book_id").notNull(),
+  email: text("email").notNull(),
+  share: integer("share").notNull(),
 });
 
 const db = drizzle(xata);

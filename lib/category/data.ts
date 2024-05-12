@@ -8,15 +8,15 @@ const xata = getXataClient();
 
 const transaction_category = pgTable("transaction_category", {
   id: text("id").primaryKey(),
-  name: text("name"),
-  icon: text("icon"),
-  type: text("type"),
-  book_id: text("book_id"),
+  name: text("name").notNull(),
+  icon: text("icon").notNull(),
+  type: text("type").notNull(),
+  book_id: text("book_id").notNull(),
 });
 
 const db = drizzle(xata);
 
-export default async function fetchCategoriesByType(type: "OUT" | "IN") {
+export async function fetchCategoriesByType(type: "OUT" | "IN") {
   const record = await db
     .select()
     .from(transaction_category)
@@ -24,4 +24,12 @@ export default async function fetchCategoriesByType(type: "OUT" | "IN") {
     .execute();
   console.log(record);
   return record;
+}
+
+export async function fetchAllCategories() {
+  const records = await db.select().from(transaction_category).execute();
+  const inCategories = records.filter((record) => record.type === "IN");
+  const outCategories = records.filter((record) => record.type === "OUT");
+
+  return { inCategories, outCategories };
 }

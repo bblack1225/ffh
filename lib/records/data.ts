@@ -21,6 +21,5 @@ const db = drizzle(xata);
 
 export async function fetchAllRecords() {
   const record = await db.select().from(transaction_record).execute();
-  console.log("record", record);
   return record;
 }

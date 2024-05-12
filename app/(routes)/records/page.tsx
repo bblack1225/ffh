@@ -1,5 +1,4 @@
 import MainContent from "@/app/ui/records/mainContent";
-import fetchCategoriesByType from "@/lib/category/data";
 import { fetchAllMembers } from "@/lib/members/data";
 import Link from "next/link";
 
