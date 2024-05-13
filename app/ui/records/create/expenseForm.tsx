@@ -10,9 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { CategoryTable, MemberTable } from "@/lib/definitions";
-import { TransactionCategoryRecord } from "@/utils/xata";
-import { JSONData } from "@xata.io/client";
+import { createRecord, State } from "@/lib/records/data";
+import Link from "next/link";
+import { useFormState } from "react-dom";
 
 type Props = {
   categories: CategoryTable[];
@@ -20,10 +22,17 @@ type Props = {
 };
 
 export default function ExpenseCreateForm({ categories, members }: Props) {
+  const initialState = { message: null, errors: {} };
+  const [state, dispatch] = useFormState<State, FormData>(
+    createRecord,
+    initialState
+  );
+  console.log("state", state);
+
   return (
-    <form>
+    <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           <div>
             <label
               htmlFor="date"
@@ -46,14 +55,14 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
           </div>
           <div>
             <label
-              htmlFor="expenseType"
+              htmlFor="category"
               className="text-xl sm:text-lg font-medium"
             >
               支出類別
             </label>
-            <Select>
+            <Select name="category">
               <SelectGroup className="mt-1">
-                <SelectTrigger id="expenseType">
+                <SelectTrigger id="category">
                   <SelectValue placeholder="選擇支出類別" />
                 </SelectTrigger>
                 <SelectContent>
@@ -85,7 +94,7 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
             <label htmlFor="member" className="text-xl sm:text-lg font-medium">
               成員
             </label>
-            <Select>
+            <Select name="member">
               <SelectGroup className="mt-1">
                 <SelectTrigger id="member">
                   <SelectValue placeholder="選擇成員" />
@@ -100,8 +109,28 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
               </SelectGroup>
             </Select>
           </div>
+          <div>
+            <label
+              htmlFor="description"
+              className="block text-xl sm:text-lg font-medium"
+            >
+              描述
+            </label>
+            <Textarea name="description" id="description" />
+          </div>
+          <div>
+            <label htmlFor="picture">Picture</label>
+            <Input id="picture" type="file" />
+          </div>
         </div>
-        <div className="flex justify-end mt-3">
+
+        <div className="flex justify-end mt-3 gap-5">
+          <Link
+            href="/records"
+            className="flex h-10 items-center bg-primary text-white px-4 rounded-lg"
+          >
+            取消
+          </Link>
           <Button type="submit">儲存</Button>
         </div>
       </div>

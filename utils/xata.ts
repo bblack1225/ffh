@@ -46,14 +46,14 @@ const tables = [
       { name: "type", type: "string", notNull: true, defaultValue: "OUT" },
       { name: "book_id", type: "link", link: { table: "accounting_book" } },
     ],
-    revLinks: [{ column: "catrgory_id", table: "transaction_record" }],
+    revLinks: [{ column: "category_id", table: "transaction_record" }],
   },
   {
     name: "transaction_record",
     columns: [
       { name: "amount", type: "int", notNull: true, defaultValue: "0" },
       {
-        name: "catrgory_id",
+        name: "category_id",
         type: "link",
         link: { table: "transaction_category" },
       },
