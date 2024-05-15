@@ -1,12 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -15,6 +13,7 @@ import { CategoryTable, MemberTable } from "@/lib/definitions";
 import { createRecord, State } from "@/lib/records/data";
 import Link from "next/link";
 import { useFormState } from "react-dom";
+import SubmitButton from "../../submitButton";
 
 type Props = {
   categories: CategoryTable[];
@@ -27,7 +26,12 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
     createRecord,
     initialState
   );
-  console.log("state", state);
+
+  // const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (!e.target.files) return;
+  //   const file = e.target.files[0];
+  //   setRecordImg(URL.createObjectURL(file));
+  // };
 
   return (
     <form action={dispatch}>
@@ -52,6 +56,17 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
                 minWidth: "intrinsic",
               }}
             />
+            <div id="date-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.date &&
+                state.errors.date.map((error: string) => (
+                  <p
+                    className="mt-2 text-sm text-red-500 font-bold"
+                    key={error}
+                  >
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
           <div>
             <label
@@ -74,6 +89,17 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
                 </SelectContent>
               </SelectGroup>
             </Select>
+            <div id="category-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.category &&
+                state.errors.category.map((error: string) => (
+                  <p
+                    className="mt-2 text-sm text-red-500 font-bold"
+                    key={error}
+                  >
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
           <div>
             <label
@@ -89,6 +115,17 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
               id="amount"
               className="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 text-xl sm:text-lg"
             />
+            <div id="amount-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.amount &&
+                state.errors.amount.map((error: string) => (
+                  <p
+                    className="mt-2 text-sm text-red-500 font-bold"
+                    key={error}
+                  >
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
           <div>
             <label htmlFor="member" className="text-xl sm:text-lg font-medium">
@@ -108,6 +145,17 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
                 </SelectContent>
               </SelectGroup>
             </Select>
+            <div id="member-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.member &&
+                state.errors.member.map((error: string) => (
+                  <p
+                    className="mt-2 text-sm text-red-500 font-bold"
+                    key={error}
+                  >
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
           <div>
             <label
@@ -120,7 +168,7 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
           </div>
           <div>
             <label htmlFor="picture">Picture</label>
-            <Input id="picture" type="file" />
+            <Input name="image" id="picture" type="file" accept="image/*" />
           </div>
         </div>
 
@@ -131,7 +179,7 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
           >
             取消
           </Link>
-          <Button type="submit">儲存</Button>
+          <SubmitButton text="儲存" />
         </div>
       </div>
     </form>

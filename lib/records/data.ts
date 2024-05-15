@@ -1,35 +1,32 @@
 "use server";
 import { drizzle } from "@xata.io/drizzle";
-import { desc, eq } from "drizzle-orm";
 import { pgTable, integer, text, date } from "drizzle-orm/pg-core";
 // Generated with CLI
 import { getXataClient } from "@/utils/xata";
 import { XataFile } from "@xata.io/client";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export type State = {
   errors?: {
-    // category_id?: string[];
-    // transaction_date?: string[];
-    // member_id?: string[];
-    // book_id?: string[];
-    // description?: string[];
+    date?: string[];
     category?: string[];
     amount?: string[];
     member?: string[];
-    // images: string[];
+    image?: string[];
   };
   message?: string | null;
 };
 
 const FormSchema = z.object({
   id: z.string(),
-  type: z.string(),
+  category: z.string().min(1, { message: "請選擇類別" }),
   description: z.string(),
   amount: z.coerce.number().gt(0, { message: "金額必須大於0" }),
-  member: z.string({
-    invalid_type_error: "請選擇成員",
-  }),
+  member: z.string().min(1, { message: "請選擇成員" }),
+  date: z.string().min(1, { message: "請選擇日期" }),
+  image: z.custom<File>(),
 });
 
 const xata = getXataClient();
@@ -52,16 +49,16 @@ export async function fetchAllRecords() {
   return record;
 }
 
-const CreateRecord = FormSchema.omit({ id: true, description: true });
+const CreateRecord = FormSchema.omit({ id: true });
 
 export async function createRecord(prevState: State, formData: FormData) {
-  console.log("formData", formData);
-
   const validatedData = CreateRecord.safeParse({
     amount: formData.get("amount"),
-    type: formData.get("type"),
-    // description: formData.get("description"),
-    member_id: formData.get("member"),
+    category: formData.get("category"),
+    description: formData.get("description"),
+    member: formData.get("member"),
+    date: formData.get("date"),
+    image: formData.get("image"),
   });
 
   if (!validatedData.success) {
@@ -71,15 +68,39 @@ export async function createRecord(prevState: State, formData: FormData) {
     };
   }
 
-  // const record = await xata.db.transaction_record.create({
-  //   amount: 3,
-  //   category_id: "rec_xyz",
-  //   transaction_date: new Date("2000-01-01T00:00:00Z"),
-  //   member_id: "rec_xyz",
-  //   book_id: "rec_xyz",
-  //   description: "string",
-  //   type: "string",
-  //   images: [XataFile.fromBase64("SGVsbG8gV29ybGQ=")],
-  // });
-  return { message: "test" };
+  const { amount, category, member, date, description, image } =
+    validatedData.data;
+  const transactionDate = new Date(date);
+
+  try {
+    const record = await xata.db.transaction_record.create({
+      amount,
+      category_id: category,
+      transaction_date: transactionDate,
+      member_id: member,
+      book_id: "rec_cngt7uudo4p4h81ufnmg",
+      description,
+      type: "OUT",
+      images: image.size > 0 ? [XataFile.fromBlob(image)] : [],
+    });
+  } catch (e) {
+    console.error("createRecord error", e);
+    return { message: "Database Error: Failed to create record" };
+  }
+
+  revalidatePath("/records");
+  redirect("/records");
+}
+
+export async function createEmptyRecord() {
+  const record = await xata.db.transaction_record.create(
+    {
+      images: [{ name: "", mediaType: "image/*", base64Content: "" }],
+    },
+    ["images.uploadUrl"]
+  );
+  if (!record.images) {
+    return { message: "Failed to create record" };
+  }
+  return { myUploadUrl: record.images[0].uploadUrl };
 }
