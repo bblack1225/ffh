@@ -7,6 +7,8 @@ import { XataFile } from "@xata.io/client";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { and, between, eq, gte, lt, lte } from "drizzle-orm";
+import { formatToDateStr } from "@/utils/dateUtil";
 
 export type State = {
   errors?: {
@@ -95,6 +97,45 @@ export async function createRecord(
 
   revalidatePath("/records");
   redirect("/records");
+}
+
+export async function fetchRecordsBetweenDate(
+  startDate: string,
+  endDate: string
+) {
+  const records = await db
+    .select()
+    .from(transaction_record)
+    .where(
+      and(
+        gte(transaction_record.transaction_date, startDate),
+        lte(transaction_record.transaction_date, endDate)
+      )
+    );
+  return records;
+}
+
+export async function fetchRecordsByMonth(year: number, month: number) {
+  // console.log("year", year);
+  // console.log("month", month);
+
+  const startDate = formatToDateStr(new Date(year, month - 1, 1));
+  const endDate = formatToDateStr(new Date(year, month, 1));
+
+  // const startDate = new Date(2024, 4, 22);
+  // const endDate = new Date(2024, 4, 22);
+
+  const records = await db
+    .select()
+    .from(transaction_record)
+    .where(
+      // eq(transaction_record.transaction_date, date)
+      and(
+        gte(transaction_record.transaction_date, startDate),
+        lt(transaction_record.transaction_date, endDate)
+      )
+    );
+  return records;
 }
 
 export async function createEmptyRecord() {

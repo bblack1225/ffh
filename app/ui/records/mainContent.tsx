@@ -1,8 +1,6 @@
 "use client";
-import DatePickerBar from "@/app/ui/records/datePickerBar";
-import { Button } from "@/components/ui/button";
+import DatePickerBar from "@/app/ui/records/date-picker/datePickerBar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 export default function MainContent() {
