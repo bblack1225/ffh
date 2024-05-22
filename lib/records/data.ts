@@ -17,6 +17,7 @@ export type State = {
     image?: string[];
   };
   message?: string | null;
+  type?: string;
 };
 
 const FormSchema = z.object({
@@ -51,7 +52,11 @@ export async function fetchAllRecords() {
 
 const CreateRecord = FormSchema.omit({ id: true });
 
-export async function createRecord(prevState: State, formData: FormData) {
+export async function createRecord(
+  prevState: State,
+  formData: FormData,
+  type: string
+) {
   const validatedData = CreateRecord.safeParse({
     amount: formData.get("amount"),
     category: formData.get("category"),
@@ -73,14 +78,14 @@ export async function createRecord(prevState: State, formData: FormData) {
   const transactionDate = new Date(date);
 
   try {
-    const record = await xata.db.transaction_record.create({
+    await xata.db.transaction_record.create({
       amount,
       category_id: category,
       transaction_date: transactionDate,
       member_id: member,
       book_id: "rec_cngt7uudo4p4h81ufnmg",
       description,
-      type: "OUT",
+      type,
       images: image.size > 0 ? [XataFile.fromBlob(image)] : [],
     });
   } catch (e) {

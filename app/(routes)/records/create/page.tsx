@@ -1,4 +1,5 @@
-import ExpenseCreateForm from "@/app/ui/records/create/expenseForm";
+import Form from "@/app/ui/records/create/Form";
+import ExpenseCreateForm from "@/app/ui/records/create/Form";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { fetchAllCategories } from "@/lib/category/data";
 import { fetchAllMembers } from "@/lib/members/data";
@@ -23,9 +24,11 @@ export default async function Page() {
             </TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="income"></TabsContent>
+        <TabsContent value="income">
+          <Form categories={inCategories} members={members} type="IN" />
+        </TabsContent>
         <TabsContent value="expense">
-          <ExpenseCreateForm categories={outCategories} members={members} />
+          <Form categories={outCategories} members={members} type="OUT" />
         </TabsContent>
       </Tabs>
     </div>

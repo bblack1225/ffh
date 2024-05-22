@@ -18,12 +18,13 @@ import SubmitButton from "../../submitButton";
 type Props = {
   categories: CategoryTable[];
   members: MemberTable[];
+  type: "IN" | "OUT";
 };
 
-export default function ExpenseCreateForm({ categories, members }: Props) {
+export default function Form({ categories, members, type }: Props) {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState<State, FormData>(
-    createRecord,
+    (state, formData) => createRecord(state, formData, type),
     initialState
   );
 
@@ -73,12 +74,16 @@ export default function ExpenseCreateForm({ categories, members }: Props) {
               htmlFor="category"
               className="text-xl sm:text-lg font-medium"
             >
-              支出類別
+              {type === "IN" ? "收入類別" : "支出類別"}
             </label>
             <Select name="category">
               <SelectGroup className="mt-1">
                 <SelectTrigger id="category">
-                  <SelectValue placeholder="選擇支出類別" />
+                  <SelectValue
+                    placeholder={
+                      type === "IN" ? "選擇收入類別" : "選擇支出類別"
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
