@@ -1,5 +1,5 @@
-import Form from "@/app/ui/records/create/Form";
-import ExpenseCreateForm from "@/app/ui/records/create/Form";
+import Form from "@/components/records/create/Form";
+import ExpenseCreateForm from "@/components/records/create/Form";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { fetchAllCategories } from "@/lib/category/data";
 import { fetchAllMembers } from "@/lib/members/data";
