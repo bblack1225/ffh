@@ -8,9 +8,10 @@ import DatePickerListView from "./dataPickerListView";
 
 type Props = {
   view: "list" | "calendar";
+  onDateChange: (year: number, month: number) => void;
 };
 
-export default function DatePickerBar({ view }: Props) {
+export default function DatePickerBar({ view, onDateChange }: Props) {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [isDetailShow, setIsDetailShow] = useState(false);
@@ -33,6 +34,7 @@ export default function DatePickerBar({ view }: Props) {
     if (view === "list") {
       setIsDetailShow(false);
     }
+    onDateChange(newYear, newMonth);
   };
   return (
     <div className="flex flex-col  justify-between my-2 w-full relative">

@@ -1,4 +1,4 @@
-import MainContent from "@/app/ui/records/mainContent";
+import MainContent from "@/components/records/mainContent";
 // import fetchCategoriesByType from "@/lib/category/data";
 import { fetchAllMembers } from "@/lib/members/data";
 import { fetchRecordsByMonth } from "@/lib/records/data";
