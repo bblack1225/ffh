@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { CategoryTable, MemberTable } from "@/lib/definitions";
-import { createRecord, State } from "@/lib/records/data";
+import { createRecord, State } from "@/lib/records/action";
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import SubmitButton from "../../submitButton";

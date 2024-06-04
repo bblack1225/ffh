@@ -3,24 +3,22 @@ import MainContent from "@/components/records/mainContent";
 import { fetchAllMembers } from "@/lib/members/data";
 import { fetchRecordsByMonth } from "@/lib/records/data";
 import { getCurrentDateString } from "@/utils/dateUtil";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 // import { fetchRecordsAtDate, fetchRecordsBetweenDate } from "@/lib/records/data";
 import Link from "next/link";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: {
-    year?: string;
-    month?: string;
-  };
-}) {
-  const { year, month } = searchParams;
-  console.log("currentYear", year);
-  console.log("currentMonth", month);
-  const currentYear = year ? Number(year) : new Date().getFullYear();
-  const currentMonth = month ? Number(month) : new Date().getMonth() + 1;
+export default async function Page() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["records"],
+    queryFn: () => fetchRecordsByMonth(2024, 5),
+  });
 
-  const records = await fetchRecordsByMonth(currentYear, currentMonth);
+  // const records = await fetchRecordsByMonth(2024, 5);
   // console.log("records!!!!", records);
 
   // const data = await fetchAllMembers();
@@ -38,7 +36,9 @@ export default async function Page({
           新增紀錄
         </Link>
       </div>
-      <MainContent />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <MainContent />
+      </HydrationBoundary>
     </div>
   );
 }
