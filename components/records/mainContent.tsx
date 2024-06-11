@@ -4,6 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchRecordsByMonth } from "@/lib/records/data";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import ListViewTable from "./listTable";
+import { RecordQuery } from "@/types/record";
 
 export default function MainContent() {
   const [currentView, setCurrentView] = useState<"list" | "calendar">("list");
@@ -35,11 +37,18 @@ export default function MainContent() {
   //     (res) => res.json()
   //   );
   // };
-  const { data } = useQuery({
+  const { data: records = [], isPending } = useQuery<RecordQuery[]>({
     queryKey: ["records", currentYear, currentMonth],
-    queryFn: () => fetchRecordsByMonth(currentYear, currentMonth),
+    queryFn: () =>
+      fetch(`/api/records?year=${currentYear}&month=${currentMonth}`).then(
+        (res) => res.json()
+      ),
+    placeholderData: [],
   });
-  console.log("data", data);
+
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Tabs defaultValue="listView" className="w-full mt-2">
@@ -61,7 +70,9 @@ export default function MainContent() {
         currentMonth={currentMonth}
         currentYear={currentYear}
       />
-      <TabsContent value="listView">list view</TabsContent>
+      <TabsContent value="listView">
+        <ListViewTable records={records} />
+      </TabsContent>
       <TabsContent value="calendarView">calendar view</TabsContent>
     </Tabs>
   );

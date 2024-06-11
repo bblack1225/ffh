@@ -10,6 +10,5 @@ export async function GET(request: NextRequest) {
     ? Number(monthQuery)
     : new Date().getMonth() + 1;
   const records = await fetchRecordsByMonth(currentYear, currentMonth);
-  console.log("records in route handler", records);
   return Response.json({ data: records });
 }

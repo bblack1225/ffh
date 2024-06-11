@@ -1,3 +1,4 @@
+"use server";
 import { drizzle } from "@xata.io/drizzle";
 import { pgTable, integer, text, date } from "drizzle-orm/pg-core";
 // Generated with CLI
@@ -45,29 +46,21 @@ export async function fetchRecordsByMonth(
   requestYear?: number,
   requestMonth?: number
 ) {
-  // console.log("year", year);
-  // console.log("month", month);
-
   const year = requestYear || new Date().getFullYear();
   const month = requestMonth || new Date().getMonth() + 1;
 
   const startDate = formatToDateStr(new Date(year, month - 1, 1));
   const endDate = formatToDateStr(new Date(year, month, 1));
 
-  // const startDate = new Date(2024, 4, 22);
-  // const endDate = new Date(2024, 4, 22);
-
   const records = await db
     .select()
     .from(transaction_record)
     .where(
-      // eq(transaction_record.transaction_date, date)
       and(
         gte(transaction_record.transaction_date, startDate),
         lt(transaction_record.transaction_date, endDate)
       )
     );
-  console.log("records", records);
 
   return records;
 }

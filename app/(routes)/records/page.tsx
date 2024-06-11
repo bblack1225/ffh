@@ -15,7 +15,7 @@ export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["records"],
-    queryFn: () => fetchRecordsByMonth(2024, 5),
+    queryFn: () => fetchRecordsByMonth(),
   });
 
   // const records = await fetchRecordsByMonth(2024, 5);
