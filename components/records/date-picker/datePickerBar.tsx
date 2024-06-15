@@ -47,7 +47,7 @@ export default function DatePickerBar({
   // };
   return (
     <div className="flex flex-col  justify-between my-2 w-full relative">
-      <div className="flex bg-slate-100 ">
+      <div className="flex ">
         <div>
           <Button
             variant="ghost"

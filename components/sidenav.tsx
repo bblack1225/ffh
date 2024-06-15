@@ -18,7 +18,7 @@ export default function SideNav() {
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
-      <div className="md:mb-2 flex h-15 items-center justify-between rounded-md bg-black p-2 md:h-20">
+      <div className="md:mb-2 flex h-15 items-center justify-between rounded-md bg-primary p-2 md:h-20">
         <div className="flex justify-center items-center md:hidden">
           <Button size="icon" onClick={() => setIsNavLinkShow((prev) => !prev)}>
             {isNavShow ? (
