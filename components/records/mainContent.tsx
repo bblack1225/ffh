@@ -6,8 +6,16 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import ListViewTable from "./listTable";
 import { RecordQuery } from "@/types/record";
+import { parseToDateSlash } from "@/utils/dateUtil";
+import { CategoriesQuery } from "@/types/category";
+import { MemberQuery } from "@/types/member";
 
-export default function MainContent() {
+type Props = {
+  categories: CategoriesQuery;
+  members: MemberQuery[];
+};
+
+export default function MainContent({ categories, members }: Props) {
   const [currentView, setCurrentView] = useState<"list" | "calendar">("list");
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
@@ -41,7 +49,7 @@ export default function MainContent() {
     queryKey: ["records", currentYear, currentMonth],
     queryFn: () =>
       fetch(`/api/records?year=${currentYear}&month=${currentMonth}`).then(
-        (res) => res.json()
+        (res) => res.json().then((res) => res.data)
       ),
     placeholderData: [],
   });
@@ -71,7 +79,11 @@ export default function MainContent() {
         currentYear={currentYear}
       />
       <TabsContent value="listView">
-        <ListViewTable records={records} />
+        <ListViewTable
+          records={records}
+          categories={categories}
+          members={members}
+        />
       </TabsContent>
       <TabsContent value="calendarView">calendar view</TabsContent>
     </Tabs>

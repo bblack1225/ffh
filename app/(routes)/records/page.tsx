@@ -1,14 +1,12 @@
 import MainContent from "@/components/records/mainContent";
-// import fetchCategoriesByType from "@/lib/category/data";
+import { fetchAllCategories } from "@/lib/category/data";
 import { fetchAllMembers } from "@/lib/members/data";
 import { fetchRecordsByMonth } from "@/lib/records/data";
-import { getCurrentDateString } from "@/utils/dateUtil";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-// import { fetchRecordsAtDate, fetchRecordsBetweenDate } from "@/lib/records/data";
 import Link from "next/link";
 
 export default async function Page() {
@@ -17,13 +15,8 @@ export default async function Page() {
     queryKey: ["records"],
     queryFn: () => fetchRecordsByMonth(),
   });
-
-  // const records = await fetchRecordsByMonth(2024, 5);
-  // console.log("records!!!!", records);
-
-  // const data = await fetchAllMembers();
-  // const category = await fetchCategoriesByType("OUT");
-  // const records = await fetchRecordsBy();
+  const categories = await fetchAllCategories();
+  const members = await fetchAllMembers();
 
   return (
     <div className="bg-background">
@@ -37,7 +30,7 @@ export default async function Page() {
         </Link>
       </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <MainContent />
+        <MainContent categories={categories} members={members} />
       </HydrationBoundary>
     </div>
   );

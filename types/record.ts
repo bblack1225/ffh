@@ -1,10 +1,10 @@
 export type RecordQuery = {
   id: string;
-  amount: number | null;
-  category_id: string | null;
-  transaction_date: string | null;
-  member_id: string | null;
-  book_id: string | null;
+  amount: number;
+  category_id: string;
+  transaction_date: string;
+  member_id: string;
+  book_id: string;
   description: string | null;
-  type: string | null;
+  type: string;
 };
