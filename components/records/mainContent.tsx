@@ -9,6 +9,7 @@ import { RecordQuery } from "@/types/record";
 import { parseToDateSlash } from "@/utils/dateUtil";
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
+import CalendarViewTable from "./calendarTable";
 
 type Props = {
   categories: CategoriesQuery;
@@ -16,7 +17,6 @@ type Props = {
 };
 
 export default function MainContent({ categories, members }: Props) {
-  const [currentView, setCurrentView] = useState<"list" | "calendar">("list");
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const handleDateChange = (month: number) => {
@@ -58,34 +58,69 @@ export default function MainContent({ categories, members }: Props) {
     return <div>Loading...</div>;
   }
 
+  const groupRecords = records.reduce(
+    (
+      acc: {
+        [key: string]: {
+          data: RecordQuery[];
+          income: number;
+          expense: number;
+        };
+      },
+      record
+    ) => {
+      const date = record.transaction_date;
+      const formatDate = parseToDateSlash(date);
+
+      if (!acc[formatDate]) {
+        acc[formatDate] = { data: [], income: 0, expense: 0 };
+      }
+      acc[formatDate].data.push(record);
+      if (record.type === "IN") {
+        acc[formatDate].income += record.amount;
+      } else {
+        acc[formatDate].expense += record.amount;
+      }
+      return acc;
+    },
+    {}
+  );
+
   return (
-    <Tabs defaultValue="listView" className="w-full mt-2">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="listView" onClick={() => setCurrentView("list")}>
-          清單
-        </TabsTrigger>
-        <TabsTrigger
-          value="calendarView"
-          onClick={() => setCurrentView("calendar")}
-        >
-          行事曆
-        </TabsTrigger>
+    <Tabs defaultValue="listView" className="w-full mt-2 ">
+      <TabsList className="grid w-full grid-cols-2 ">
+        <TabsTrigger value="listView">清單</TabsTrigger>
+        <TabsTrigger value="calendarView">行事曆</TabsTrigger>
       </TabsList>
       <DatePickerBar
-        view={currentView}
         onDateChange={handleDateChange}
         onYearChange={(val) => setCurrentYear(val)}
         currentMonth={currentMonth}
         currentYear={currentYear}
       />
+      {/* <div className="border-b mb-3" /> */}
       <TabsContent value="listView">
+        <div className="">
+          <ListViewTable
+            groupRecords={groupRecords}
+            categories={categories}
+            members={members}
+          />
+        </div>
+      </TabsContent>
+      <TabsContent value="calendarView">
+        <CalendarViewTable
+          currentMonth={currentMonth}
+          currentYear={currentYear}
+          onDateChange={handleDateChange}
+        />
         <ListViewTable
-          records={records}
+          groupRecords={groupRecords}
+          // records={records}
           categories={categories}
           members={members}
         />
       </TabsContent>
-      <TabsContent value="calendarView">calendar view</TabsContent>
     </Tabs>
   );
 }

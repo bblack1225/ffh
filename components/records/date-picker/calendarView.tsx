@@ -38,7 +38,7 @@ export default function CalendarView({
   };
 
   return (
-    <div className="flex flex-col bg-white shadow-xl p-1 w-full min-[520px]:w-80 ">
+    <div className="flex flex-col p-1 w-full min-[520px]:w-80 ">
       <div className="grid grid-cols-7">
         {WEEKDAYS.map((day) => (
           <div key={day} className="flex justify-center  py-2 font-bold">
@@ -63,7 +63,7 @@ export default function CalendarView({
           <div
             key={day}
             className={clsx(
-              "bg-white py-1 flex flex-col items-center font-bold text-gray-800 hover:bg-neutral-200 hover:rounded-lg hover:cursor-pointer",
+              "py-1 flex flex-col items-center font-bold text-gray-800 hover:bg-neutral-200 hover:rounded-lg hover:cursor-pointer",
               currentDay === day && "bg-neutral-200 rounded-lg"
             )}
             onClick={() => setCurrentDay(day)}

@@ -7,7 +7,6 @@ import CalendarView from "./calendarView";
 import DatePickerListView from "./dataPickerListView";
 
 type Props = {
-  view: "list" | "calendar";
   onDateChange: (month: number) => void;
   currentMonth: number;
   currentYear: number;
@@ -15,7 +14,6 @@ type Props = {
 };
 
 export default function DatePickerBar({
-  view,
   onDateChange,
   currentMonth,
   currentYear,
@@ -78,28 +76,19 @@ export default function DatePickerBar({
       </div>
       <div
         className={clsx(
-          `flex absolute inset-x-0 top-10 ${view === "list" ? "min-[520px]:justify-center" : "justify-center"}`,
+          `flex absolute inset-x-0 top-10 min-[520px]:justify-center`,
           {
             hidden: !isDetailShow,
           }
         )}
       >
-        {view === "list" ? (
-          <DatePickerListView
-            currentMonth={currentMonth}
-            currentYear={currentYear}
-            // onMonthChange={handleMonthChange}
-            onMonthChange={onDateChange}
-            onYearChange={(val) => onYearChange(currentYear + val)}
-          />
-        ) : (
-          <CalendarView
-            month={currentMonth}
-            year={currentYear}
-            // onMonthChange={handleMonthChange}
-            onMonthChange={onDateChange}
-          />
-        )}
+        <DatePickerListView
+          currentMonth={currentMonth}
+          currentYear={currentYear}
+          // onMonthChange={handleMonthChange}
+          onMonthChange={onDateChange}
+          onYearChange={(val) => onYearChange(currentYear + val)}
+        />
       </div>
     </div>
   );

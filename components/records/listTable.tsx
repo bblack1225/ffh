@@ -5,40 +5,24 @@ import { getWeekDay, parseToDateSlash } from "@/utils/dateUtil";
 import { WrenchIcon } from "@heroicons/react/24/outline";
 
 type Props = {
-  records: RecordQuery[] | [];
+  // records: RecordQuery[] | [];
   categories: CategoriesQuery;
   members: MemberQuery[];
+  groupRecords: {
+    [key: string]: {
+      data: RecordQuery[];
+      income: number;
+      expense: number;
+    };
+  };
 };
 
-export default function ListViewTable({ records, categories, members }: Props) {
+export default function ListViewTable({
+  groupRecords,
+  categories,
+  members,
+}: Props) {
   const { inCategories, outCategories } = categories;
-  const groupRecords = records.reduce(
-    (
-      acc: {
-        [key: string]: {
-          data: RecordQuery[];
-          income: number;
-          expense: number;
-        };
-      },
-      record
-    ) => {
-      const date = record.transaction_date;
-      const formatDate = parseToDateSlash(date);
-
-      if (!acc[formatDate]) {
-        acc[formatDate] = { data: [], income: 0, expense: 0 };
-      }
-      acc[formatDate].data.push(record);
-      if (record.type === "IN") {
-        acc[formatDate].income += record.amount;
-      } else {
-        acc[formatDate].expense += record.amount;
-      }
-      return acc;
-    },
-    {}
-  );
 
   const getCategoryNameById = (type: string, categoryId: string) => {
     const selectedCategories = type === "IN" ? inCategories : outCategories;
