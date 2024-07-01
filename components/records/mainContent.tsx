@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import ListViewTable from "./listTable";
 import { RecordQuery } from "@/types/record";
-import { parseToDateSlash } from "@/utils/dateUtil";
+import { getCalendarRange, parseToDateSlash } from "@/utils/dateUtil";
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import CalendarViewTable from "./calendarTable";
@@ -20,6 +20,7 @@ type Props = {
 export default function MainContent({ categories, members }: Props) {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
+  const [mode, setMode] = useState<"list" | "calendar">("list");
   const handleDateChange = (month: number) => {
     let newMonth;
     let newYear;
@@ -41,16 +42,15 @@ export default function MainContent({ categories, members }: Props) {
     // }
     // onDateChange(newYear, newMonth);
   };
-  // const handleDateChange = async (year: number, month: number) => {
-  //   const data = await fetch(`/api/records?year=${year}&month=${month}`).then(
-  //     (res) => res.json()
-  //   );
-  // };
+  const { start, end } = getCalendarRange(currentYear, currentMonth);
+
+  // const handleCalendarModeDateChange = (start)
+
   const { data: records = [], isPending } = useQuery<RecordQuery[]>({
     queryKey: ["records", currentYear, currentMonth],
     queryFn: () =>
-      fetch(`/api/records?year=${currentYear}&month=${currentMonth}`).then(
-        (res) => res.json().then((res) => res.data)
+      fetch(`/api/records?start=${start}&end=${end}`).then((res) =>
+        res.json().then((res) => res.data)
       ),
     placeholderData: [],
   });
@@ -87,14 +87,16 @@ export default function MainContent({ categories, members }: Props) {
     {}
   );
 
-  console.log("groupRecords", groupRecords);
-
   return (
-    <Tabs defaultValue="listView" className="w-full mt-2 ">
+    <Tabs defaultValue="list" className="w-full mt-2 ">
       <div className="px-3">
         <TabsList className="grid w-full grid-cols-2 ">
-          <TabsTrigger value="listView">清單</TabsTrigger>
-          <TabsTrigger value="calendarView">行事曆</TabsTrigger>
+          <TabsTrigger value="list" onClick={() => setMode("list")}>
+            清單
+          </TabsTrigger>
+          <TabsTrigger value="calendar" onClick={() => setMode("calendar")}>
+            行事曆
+          </TabsTrigger>
         </TabsList>
       </div>
       <DatePickerBar
@@ -103,8 +105,8 @@ export default function MainContent({ categories, members }: Props) {
         currentMonth={currentMonth}
         currentYear={currentYear}
       />
-      <TabsContent value="listView">
-        <div className="">
+      <TabsContent value="list">
+        <div className="px-3">
           <ListViewTable
             groupRecords={groupRecords}
             categories={categories}
@@ -112,7 +114,7 @@ export default function MainContent({ categories, members }: Props) {
           />
         </div>
       </TabsContent>
-      <TabsContent value="calendarView">
+      <TabsContent value="calendar">
         <CalendarView
           month={currentMonth}
           year={currentYear}

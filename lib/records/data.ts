@@ -3,8 +3,8 @@ import { drizzle } from "@xata.io/drizzle";
 import { pgTable, integer, text, date } from "drizzle-orm/pg-core";
 // Generated with CLI
 import { getXataClient } from "@/utils/xata";
-import { and, gte, lt, lte } from "drizzle-orm";
-import { formatToDateStr } from "@/utils/dateUtil";
+import { and, asc, gte, lt, lte } from "drizzle-orm";
+import { getCalendarRange } from "@/utils/dateUtil";
 
 const xata = getXataClient();
 
@@ -43,14 +43,22 @@ export async function fetchRecordsBetweenDate(
 }
 
 export async function fetchRecordsByMonth(
-  requestYear?: number,
-  requestMonth?: number
+  start?: string | null,
+  end?: string | null
 ) {
-  const year = requestYear || new Date().getFullYear();
-  const month = requestMonth || new Date().getMonth() + 1;
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth() + 1;
 
-  const startDate = formatToDateStr(new Date(year, month - 1, 1));
-  const endDate = formatToDateStr(new Date(year, month, 1));
+  let startDate;
+  let endDate;
+  if (start && end) {
+    startDate = start;
+    endDate = end;
+  } else {
+    const { start: startRange, end: endRange } = getCalendarRange(year, month);
+    startDate = startRange;
+    endDate = endRange;
+  }
 
   const records = await db
     .select()
@@ -58,9 +66,10 @@ export async function fetchRecordsByMonth(
     .where(
       and(
         gte(transaction_record.transaction_date, startDate),
-        lt(transaction_record.transaction_date, endDate)
+        lte(transaction_record.transaction_date, endDate)
       )
-    );
+    )
+    .orderBy(asc(transaction_record.transaction_date));
 
   return records;
 }

@@ -1,7 +1,11 @@
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import { RecordQuery } from "@/types/record";
-import { formatToDateStr, parseToDateSlash } from "@/utils/dateUtil";
+import {
+  formatToDateStr,
+  getCalendarRange,
+  parseToDateSlash,
+} from "@/utils/dateUtil";
 import clsx from "clsx";
 import { useState } from "react";
 
@@ -35,6 +39,8 @@ export default function CalendarView({
 
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
   const lastDayOfLastMonth = new Date(year, month - 1, 0).getDate();
+
+  const { start, end } = getCalendarRange(year, month);
 
   const daysOfLastMonth = Array.from(
     { length: firstDayOfMonth },
