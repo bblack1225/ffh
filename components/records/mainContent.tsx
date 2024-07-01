@@ -1,7 +1,6 @@
 "use client";
 import DatePickerBar from "@/components/records/date-picker/datePickerBar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { fetchRecordsByMonth } from "@/lib/records/data";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import ListViewTable from "./listTable";
@@ -9,8 +8,17 @@ import { RecordQuery } from "@/types/record";
 import { getCalendarRange, parseToDateSlash } from "@/utils/dateUtil";
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
-import CalendarViewTable from "./calendarTable";
 import CalendarView from "./date-picker/calendarView";
+
+type RecordGroup = {
+  data: RecordQuery[];
+  income: number;
+  expense: number;
+};
+
+type GroupRecords = {
+  [key: string]: RecordGroup;
+};
 
 type Props = {
   categories: CategoriesQuery;
@@ -59,33 +67,33 @@ export default function MainContent({ categories, members }: Props) {
     return <div>Loading...</div>;
   }
 
-  const groupRecords = records.reduce(
-    (
-      acc: {
-        [key: string]: {
-          data: RecordQuery[];
-          income: number;
-          expense: number;
-        };
-      },
-      record
-    ) => {
-      const date = record.transaction_date;
-      const formatDate = parseToDateSlash(date);
+  const filterByMonth = (records: GroupRecords, month: number) => {
+    return Object.keys(records)
+      .filter((date) => new Date(date).getMonth() + 1 === month)
+      .reduce((obj: GroupRecords, key) => {
+        obj[key] = records[key];
+        return obj;
+      }, {});
+  };
 
-      if (!acc[formatDate]) {
-        acc[formatDate] = { data: [], income: 0, expense: 0 };
-      }
-      acc[formatDate].data.push(record);
-      if (record.type === "IN") {
-        acc[formatDate].income += record.amount;
-      } else {
-        acc[formatDate].expense += record.amount;
-      }
-      return acc;
-    },
-    {}
-  );
+  const groupRecords = records.reduce((acc: GroupRecords, record) => {
+    const date = record.transaction_date;
+    const formatDate = parseToDateSlash(date);
+
+    if (!acc[formatDate]) {
+      acc[formatDate] = { data: [], income: 0, expense: 0 };
+    }
+    acc[formatDate].data.push(record);
+    if (record.type === "IN") {
+      acc[formatDate].income += record.amount;
+    } else {
+      acc[formatDate].expense += record.amount;
+    }
+    return acc;
+  }, {});
+
+  const filtered =
+    mode === "list" ? filterByMonth(groupRecords, currentMonth) : groupRecords;
 
   return (
     <Tabs defaultValue="list" className="w-full mt-2 ">
@@ -108,7 +116,7 @@ export default function MainContent({ categories, members }: Props) {
       <TabsContent value="list">
         <div className="px-3">
           <ListViewTable
-            groupRecords={groupRecords}
+            groupRecords={filtered}
             categories={categories}
             members={members}
           />
@@ -119,7 +127,7 @@ export default function MainContent({ categories, members }: Props) {
           month={currentMonth}
           year={currentYear}
           onMonthChange={handleDateChange}
-          groupRecords={groupRecords}
+          groupRecords={filtered}
           categories={categories}
           members={members}
         />
