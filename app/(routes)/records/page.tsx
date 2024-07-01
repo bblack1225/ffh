@@ -20,7 +20,7 @@ export default async function Page() {
 
   return (
     <div className="bg-background">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-3">
         <h1 className="text-2xl font-bold">收支紀錄</h1>
         <Link
           href="/records/create"

@@ -44,7 +44,7 @@ export default function DatePickerBar({
   //   onDateChange(newYear, newMonth);
   // };
   return (
-    <div className="flex flex-col  justify-between my-2 w-full relative">
+    <div className="flex flex-col  justify-between my-2 w-full relative px-3">
       <div className="flex ">
         <div>
           <Button

@@ -13,12 +13,13 @@ export default function CalendarViewTable({
 }: Props) {
   return (
     <div>
-      <CalendarView
+      {/* <CalendarView
         month={currentMonth}
         year={currentYear}
         // onMonthChange={handleMonthChange}
         onMonthChange={onDateChange}
-      />
+      /> */}
+      <div className="border-b-2 mt-2 border-gray-900" />
     </div>
   );
 }

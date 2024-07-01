@@ -10,6 +10,7 @@ import { parseToDateSlash } from "@/utils/dateUtil";
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import CalendarViewTable from "./calendarTable";
+import CalendarView from "./date-picker/calendarView";
 
 type Props = {
   categories: CategoriesQuery;
@@ -86,19 +87,22 @@ export default function MainContent({ categories, members }: Props) {
     {}
   );
 
+  console.log("groupRecords", groupRecords);
+
   return (
     <Tabs defaultValue="listView" className="w-full mt-2 ">
-      <TabsList className="grid w-full grid-cols-2 ">
-        <TabsTrigger value="listView">清單</TabsTrigger>
-        <TabsTrigger value="calendarView">行事曆</TabsTrigger>
-      </TabsList>
+      <div className="px-3">
+        <TabsList className="grid w-full grid-cols-2 ">
+          <TabsTrigger value="listView">清單</TabsTrigger>
+          <TabsTrigger value="calendarView">行事曆</TabsTrigger>
+        </TabsList>
+      </div>
       <DatePickerBar
         onDateChange={handleDateChange}
         onYearChange={(val) => setCurrentYear(val)}
         currentMonth={currentMonth}
         currentYear={currentYear}
       />
-      {/* <div className="border-b mb-3" /> */}
       <TabsContent value="listView">
         <div className="">
           <ListViewTable
@@ -109,14 +113,11 @@ export default function MainContent({ categories, members }: Props) {
         </div>
       </TabsContent>
       <TabsContent value="calendarView">
-        <CalendarViewTable
-          currentMonth={currentMonth}
-          currentYear={currentYear}
-          onDateChange={handleDateChange}
-        />
-        <ListViewTable
+        <CalendarView
+          month={currentMonth}
+          year={currentYear}
+          onMonthChange={handleDateChange}
           groupRecords={groupRecords}
-          // records={records}
           categories={categories}
           members={members}
         />
