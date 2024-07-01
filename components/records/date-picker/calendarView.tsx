@@ -1,13 +1,9 @@
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import { RecordQuery } from "@/types/record";
-import {
-  formatToDateStr,
-  getCalendarRange,
-  parseToDateSlash,
-} from "@/utils/dateUtil";
+import { parseToDateSlash } from "@/utils/dateUtil";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const WEEKDAYS = ["日", "一", "二", "三", "四", "五", "六"];
 
@@ -40,8 +36,6 @@ export default function CalendarView({
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
   const lastDayOfLastMonth = new Date(year, month - 1, 0).getDate();
 
-  const { start, end } = getCalendarRange(year, month);
-
   const daysOfLastMonth = Array.from(
     { length: firstDayOfMonth },
     (_, i) => lastDayOfLastMonth - i
@@ -51,6 +45,13 @@ export default function CalendarView({
     { length: 42 - daysInMonth - firstDayOfMonth },
     (_, i) => i + 1
   );
+
+  useEffect(() => {
+    const lastDayOfMonth = new Date(year, month, 0).getDate();
+    if (currentDay > lastDayOfMonth) {
+      setCurrentDay(lastDayOfMonth);
+    }
+  }, [month, year, currentDay]);
 
   const handleLastMonthDayChange = (day: number) => {
     onMonthChange(month - 1);
@@ -62,6 +63,18 @@ export default function CalendarView({
     setCurrentDay(day);
   };
 
+  const adjustCurrentDay = (
+    year: number,
+    month: number,
+    selectedDay: number
+  ) => {
+    const lastDayOfMonth = new Date(year, month, 0).getDate();
+    // if (selectedDay > lastDayOfMonth) {
+    //   return lastDayOfMonth;
+    // }
+    // return selectedDay;
+  };
+
   const currentDateStr = `${year}-${month}-${currentDay}`;
   const currentDate = parseToDateSlash(currentDateStr);
 
@@ -70,6 +83,7 @@ export default function CalendarView({
     income: 0,
     expense: 0,
   };
+  console.log("records", records);
 
   return (
     <div className="flex flex-col">
@@ -82,41 +96,64 @@ export default function CalendarView({
           ))}
         </div>
         <div className="grid grid-cols-7 grid-rows-6 gap-px px-px ">
-          {daysOfLastMonth.map((day) => (
-            <div
-              key={day}
-              className={clsx(
-                "py-1 flex flex-col items-center font-bold text-stone-400 hover:text-stone-500 hover:bg-stone-100 hover:rounded-lg  hover:cursor-pointer"
-              )}
-              onClick={() => handleLastMonthDayChange(day)}
-            >
-              <div>{day}</div>
-              <span className="w-1.5 bg-red-300 h-1.5 rounded-full" />
-            </div>
-          ))}
-          {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => (
-            <div
-              key={day}
-              className={clsx(
-                "py-1 flex flex-col items-center font-bold text-gray-800 hover:bg-neutral-200 hover:rounded-lg hover:cursor-pointer",
-                currentDay === day && "bg-neutral-200 rounded-lg"
-              )}
-              onClick={() => setCurrentDay(day)}
-            >
-              <div>{day}</div>
-              <span className="w-1.5 bg-red-400 h-1.5 rounded-full" />
-            </div>
-          ))}
-          {daysOfNextMonth.map((day) => (
-            <div
-              key={day}
-              className=" py-1 flex flex-col items-center font-bold text-stone-400 hover:text-stone-500 hover:bg-stone-100 hover:rounded-lg  hover:cursor-pointer"
-              onClick={() => handleNextMonthDayChange(day)}
-            >
-              <div>{day}</div>
-              <span className="w-1.5 bg-red-300 h-1.5 rounded-full" />
-            </div>
-          ))}
+          {daysOfLastMonth.map((day) => {
+            const dateStr = `${year}-${month - 1}-${day}`;
+            const formattedDate = parseToDateSlash(dateStr);
+            const hasRecord = groupRecords[formattedDate];
+
+            return (
+              <div
+                key={day}
+                className={clsx(
+                  "py-1 flex flex-col items-center font-bold text-stone-400 hover:text-stone-500 hover:bg-stone-100 hover:rounded-lg  hover:cursor-pointer"
+                )}
+                onClick={() => handleLastMonthDayChange(day)}
+              >
+                <div>{day}</div>
+                {hasRecord && (
+                  <span className="w-1.5 bg-red-300 h-1.5 rounded-full" />
+                )}
+              </div>
+            );
+          })}
+          {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
+            const dateStr = `${year}-${month}-${day}`;
+            const formattedDate = parseToDateSlash(dateStr);
+            const hasRecord = groupRecords[formattedDate];
+            return (
+              <div
+                key={day}
+                className={clsx(
+                  "py-1 flex flex-col items-center font-bold text-gray-800 hover:bg-neutral-200 hover:rounded-lg hover:cursor-pointer",
+                  currentDay === day && "bg-neutral-200 rounded-lg"
+                )}
+                onClick={() => setCurrentDay(day)}
+              >
+                <div>{day}</div>
+
+                {hasRecord && (
+                  <span className="w-1.5 bg-red-400 h-1.5 rounded-full" />
+                )}
+              </div>
+            );
+          })}
+          {daysOfNextMonth.map((day) => {
+            const dateStr = `${year}-${month + 1}-${day}`;
+            const formattedDate = parseToDateSlash(dateStr);
+            const hasRecord = groupRecords[formattedDate];
+            return (
+              <div
+                key={day}
+                className=" py-1 flex flex-col items-center font-bold text-stone-400 hover:text-stone-500 hover:bg-stone-100 hover:rounded-lg  hover:cursor-pointer"
+                onClick={() => handleNextMonthDayChange(day)}
+              >
+                <div>{day}</div>
+                {hasRecord && (
+                  <span className="w-1.5 bg-red-300 h-1.5 rounded-full" />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className="border-b-2 border-gray-500 my-2" />
