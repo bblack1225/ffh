@@ -23,8 +23,15 @@ export const formatToDateStr = (date: Date) => {
   return date.toLocaleDateString("en-CA");
 };
 
+export const formatToYYYYMMDD = (year: number, month: number, day: number) => {
+  const monthStr = String(month).padStart(2, "0");
+  const dayStr = String(day).padStart(2, "0");
+  return `${year}/${monthStr}/${dayStr}`;
+};
+
 export const parseToDateSlash = (dateStr: string) => {
   const date = new Date(dateStr);
+
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");

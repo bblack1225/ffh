@@ -1,7 +1,7 @@
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import { RecordQuery } from "@/types/record";
-import { parseToDateSlash } from "@/utils/dateUtil";
+import { formatToYYYYMMDD, parseToDateSlash } from "@/utils/dateUtil";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
@@ -63,27 +63,13 @@ export default function CalendarView({
     setCurrentDay(day);
   };
 
-  const adjustCurrentDay = (
-    year: number,
-    month: number,
-    selectedDay: number
-  ) => {
-    const lastDayOfMonth = new Date(year, month, 0).getDate();
-    // if (selectedDay > lastDayOfMonth) {
-    //   return lastDayOfMonth;
-    // }
-    // return selectedDay;
-  };
-
-  const currentDateStr = `${year}-${month}-${currentDay}`;
-  const currentDate = parseToDateSlash(currentDateStr);
+  const currentDate = formatToYYYYMMDD(year, month, currentDay);
 
   const records = groupRecords[currentDate] || {
     data: [],
     income: 0,
     expense: 0,
   };
-  console.log("records", records);
 
   return (
     <div className="flex flex-col">
@@ -97,8 +83,7 @@ export default function CalendarView({
         </div>
         <div className="grid grid-cols-7 grid-rows-6 gap-px px-px ">
           {daysOfLastMonth.map((day) => {
-            const dateStr = `${year}-${month - 1}-${day}`;
-            const formattedDate = parseToDateSlash(dateStr);
+            const formattedDate = formatToYYYYMMDD(year, month - 1, day);
             const hasRecord = groupRecords[formattedDate];
 
             return (
@@ -110,36 +95,41 @@ export default function CalendarView({
                 onClick={() => handleLastMonthDayChange(day)}
               >
                 <div>{day}</div>
-                {hasRecord && (
-                  <span className="w-1.5 bg-red-300 h-1.5 rounded-full" />
-                )}
+                <span
+                  className={clsx(
+                    "w-1.5 h-1.5 rounded-full",
+                    hasRecord ? "bg-red-400" : "bg-transparent"
+                  )}
+                />
               </div>
             );
           })}
           {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
-            const dateStr = `${year}-${month}-${day}`;
-            const formattedDate = parseToDateSlash(dateStr);
+            const formattedDate = formatToYYYYMMDD(year, month, day);
             const hasRecord = groupRecords[formattedDate];
+
             return (
               <div
                 key={day}
                 className={clsx(
-                  "py-1 flex flex-col items-center font-bold text-gray-800 hover:bg-neutral-200 hover:rounded-lg hover:cursor-pointer",
+                  " py-1 flex flex-col items-center font-bold text-gray-800 hover:bg-neutral-200 hover:rounded-lg hover:cursor-pointer",
                   currentDay === day && "bg-neutral-200 rounded-lg"
                 )}
                 onClick={() => setCurrentDay(day)}
               >
                 <div>{day}</div>
 
-                {hasRecord && (
-                  <span className="w-1.5 bg-red-400 h-1.5 rounded-full" />
-                )}
+                <span
+                  className={clsx(
+                    "w-1.5 h-1.5 rounded-full",
+                    hasRecord ? "bg-red-400" : "bg-transparent"
+                  )}
+                />
               </div>
             );
           })}
           {daysOfNextMonth.map((day) => {
-            const dateStr = `${year}-${month + 1}-${day}`;
-            const formattedDate = parseToDateSlash(dateStr);
+            const formattedDate = formatToYYYYMMDD(year, month + 1, day);
             const hasRecord = groupRecords[formattedDate];
             return (
               <div
