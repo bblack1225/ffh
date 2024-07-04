@@ -1,8 +1,8 @@
 "use client";
 import DatePickerBar from "@/components/records/date-picker/datePickerBar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import ListViewTable from "./listTable";
 import { RecordQuery } from "@/types/record";
 import { getCalendarRange, parseToDateSlash } from "@/utils/dateUtil";

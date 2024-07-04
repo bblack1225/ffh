@@ -1,7 +1,7 @@
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import { RecordQuery } from "@/types/record";
-import { formatToYYYYMMDD, parseToDateSlash } from "@/utils/dateUtil";
+import { formatToYYYYMMDD } from "@/utils/dateUtil";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import RecordItem from "../recordItem";
