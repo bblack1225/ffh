@@ -1,8 +1,8 @@
 "use client";
 import DatePickerBar from "@/components/records/date-picker/datePickerBar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { Suspense, useState } from "react";
 import ListViewTable from "./listTable";
 import { RecordQuery } from "@/types/record";
 import { getCalendarRange, parseToDateSlash } from "@/utils/dateUtil";
@@ -23,6 +23,13 @@ type GroupRecords = {
 type Props = {
   categories: CategoriesQuery;
   members: MemberQuery[];
+};
+
+const fetchSomeData = async (start: string, end: string) => {
+  const res = await fetch(`/api/records?start=${start}&end=${end}`).then(
+    (res) => res.json().then((res) => res.data)
+  );
+  return res;
 };
 
 export default function MainContent({ categories, members }: Props) {
@@ -54,18 +61,14 @@ export default function MainContent({ categories, members }: Props) {
 
   // const handleCalendarModeDateChange = (start)
 
-  const { data: records = [], isPending } = useQuery<RecordQuery[]>({
+  const {
+    data: records = [],
+    isPending,
+    status,
+  } = useQuery<RecordQuery[]>({
     queryKey: ["records", currentYear, currentMonth],
-    queryFn: () =>
-      fetch(`/api/records?start=${start}&end=${end}`).then((res) =>
-        res.json().then((res) => res.data)
-      ),
-    placeholderData: [],
+    queryFn: () => fetchSomeData(start, end),
   });
-
-  if (isPending) {
-    return <div>Loading...</div>;
-  }
 
   const filterByMonth = (records: GroupRecords, month: number) => {
     return Object.keys(records)
@@ -113,25 +116,39 @@ export default function MainContent({ categories, members }: Props) {
         currentMonth={currentMonth}
         currentYear={currentYear}
       />
-      <TabsContent value="list">
-        <div className="px-3">
-          <ListViewTable
-            groupRecords={filtered}
-            categories={categories}
-            members={members}
-          />
+      {isPending ? (
+        <div className="flex justify-center items-center h-50 font-extrabold text-xl">
+          載入中...
         </div>
-      </TabsContent>
-      <TabsContent value="calendar">
-        <CalendarView
-          month={currentMonth}
-          year={currentYear}
-          onMonthChange={handleDateChange}
-          groupRecords={filtered}
-          categories={categories}
-          members={members}
-        />
-      </TabsContent>
+      ) : (
+        <>
+          <TabsContent value="list">
+            <div className="px-3">
+              {records.length === 0 ? (
+                <p className="text-slate-500 font-bold">
+                  沒有資料。點擊右上角新增紀錄。
+                </p>
+              ) : (
+                <ListViewTable
+                  groupRecords={filtered}
+                  categories={categories}
+                  members={members}
+                />
+              )}
+            </div>
+          </TabsContent>
+          <TabsContent value="calendar">
+            <CalendarView
+              month={currentMonth}
+              year={currentYear}
+              onMonthChange={handleDateChange}
+              groupRecords={filtered}
+              categories={categories}
+              members={members}
+            />
+          </TabsContent>
+        </>
+      )}
     </Tabs>
   );
 }

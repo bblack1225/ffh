@@ -3,6 +3,7 @@ import { MemberQuery } from "@/types/member";
 import { RecordQuery } from "@/types/record";
 import { getWeekDay, parseToDateSlash } from "@/utils/dateUtil";
 import { WrenchIcon } from "@heroicons/react/24/outline";
+import RecordItem from "./recordItem";
 
 type Props = {
   // records: RecordQuery[] | [];
@@ -22,20 +23,6 @@ export default function ListViewTable({
   categories,
   members,
 }: Props) {
-  const { inCategories, outCategories } = categories;
-
-  const getCategoryNameById = (type: string, categoryId: string) => {
-    const selectedCategories = type === "IN" ? inCategories : outCategories;
-    const category = selectedCategories.find(
-      (category) => category.id === categoryId
-    );
-
-    return category?.name;
-  };
-  const getMemberNameById = (memberId: string) => {
-    const member = members.find((member) => member.id === memberId);
-    return member?.name;
-  };
   return (
     <>
       {Object.entries(groupRecords).map(([date, records]) => {
@@ -48,33 +35,12 @@ export default function ListViewTable({
             </div>
             {records.data.map((item) => {
               return (
-                <div
+                <RecordItem
                   key={item.id}
-                  className="p-2 flex justify-between  border-b"
-                >
-                  <div className="flex items-center">
-                    <WrenchIcon className="w-6" />
-                  </div>
-                  <div className="flex justify-between flex-1 items-center	">
-                    <div className="flex flex-col">
-                      <div className="pl-2">
-                        {getCategoryNameById(item.type, item.category_id)}
-                      </div>
-                      <div className="pl-2 font-light text-sm">
-                        {getMemberNameById(item.member_id)} | {item.description}
-                      </div>
-                    </div>
-                    {item.type === "IN" ? (
-                      <div className="bg-[rgb(94,156,115)] rounded-xl px-1">
-                        <span className="text-white font-medium">
-                          ${item.amount}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="pr-1">${item.amount}</div>
-                    )}
-                  </div>
-                </div>
+                  members={members}
+                  categories={categories}
+                  item={item}
+                />
               );
             })}
             <div className="flex justify-end px-3 py-2 gap-1">

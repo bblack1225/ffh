@@ -4,6 +4,7 @@ import { RecordQuery } from "@/types/record";
 import { formatToYYYYMMDD, parseToDateSlash } from "@/utils/dateUtil";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import RecordItem from "../recordItem";
 
 const WEEKDAYS = ["日", "一", "二", "三", "四", "五", "六"];
 
@@ -146,8 +147,8 @@ export default function CalendarView({
           })}
         </div>
       </div>
-      <div className="border-b-2 border-gray-500 my-2" />
-      <div className="flex justify-between  px-3">
+      <div className="border-b-2 border-gray-500 " />
+      <div className="flex justify-between  px-3 py-2">
         <div>
           支出:<span className="text-amber-500">${records.expense}</span>
         </div>
@@ -162,7 +163,22 @@ export default function CalendarView({
           </span>
         </div>
       </div>
-      <div className="border-b-2 border-gray-500 my-2" />
+      <div className="border-b-2 border-gray-500 " />
+      {records.data.length === 0 ? (
+        <p className="p-2">查無資料</p>
+      ) : (
+        <>
+          {records.data.map((record) => (
+            <RecordItem
+              key={record.id}
+              categories={categories}
+              members={members}
+              item={record}
+              borderStyle="border-gray-500 border-2"
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 }
