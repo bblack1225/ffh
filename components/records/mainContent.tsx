@@ -25,11 +25,45 @@ type Props = {
   members: MemberQuery[];
 };
 
-const fetchSomeData = async (start: string, end: string) => {
+const fetchSomeData = async (currentYear: number, currentMonth: number) => {
+  const { start, end } = getCalendarRange(currentYear, currentMonth);
+
   const res = await fetch(`/api/records?start=${start}&end=${end}`).then(
     (res) => res.json().then((res) => res.data)
   );
   return res;
+};
+
+const filterByMonth = (records: GroupRecords, month: number) => {
+  return Object.keys(records)
+    .filter((date) => new Date(date).getMonth() + 1 === month)
+    .reduce((obj: GroupRecords, key) => {
+      obj[key] = records[key];
+      return obj;
+    }, {});
+};
+
+const transformRecords = (data: RecordQuery[], currentMonth: number) => {
+  console.log("data", data);
+
+  const calendarRecords = data.reduce((acc: GroupRecords, record) => {
+    const date = record.transaction_date;
+    const formatDate = parseToDateSlash(date);
+
+    if (!acc[formatDate]) {
+      acc[formatDate] = { data: [], income: 0, expense: 0 };
+    }
+    acc[formatDate].data.push(record);
+    if (record.type === "IN") {
+      acc[formatDate].income += record.amount;
+    } else {
+      acc[formatDate].expense += record.amount;
+    }
+    return acc;
+  }, {});
+  const listRecords = filterByMonth(calendarRecords, currentMonth);
+
+  return { calendarRecords, listRecords, data };
 };
 
 export default function MainContent({ categories, members }: Props) {
@@ -59,44 +93,18 @@ export default function MainContent({ categories, members }: Props) {
   };
   const { start, end } = getCalendarRange(currentYear, currentMonth);
 
-  // const handleCalendarModeDateChange = (start)
-
   const {
-    data: records = [],
+    data: records = { data: [], listRecords: {}, calendarRecords: {} },
     isPending,
-    status,
-  } = useQuery<RecordQuery[]>({
+  } = useQuery({
     queryKey: ["records", currentYear, currentMonth],
-    queryFn: () => fetchSomeData(start, end),
+    queryFn: () => fetchSomeData(currentYear, currentMonth),
+    select: (data: RecordQuery[]) => transformRecords(data, currentMonth),
   });
-
-  const filterByMonth = (records: GroupRecords, month: number) => {
-    return Object.keys(records)
-      .filter((date) => new Date(date).getMonth() + 1 === month)
-      .reduce((obj: GroupRecords, key) => {
-        obj[key] = records[key];
-        return obj;
-      }, {});
-  };
-
-  const groupRecords = records.reduce((acc: GroupRecords, record) => {
-    const date = record.transaction_date;
-    const formatDate = parseToDateSlash(date);
-
-    if (!acc[formatDate]) {
-      acc[formatDate] = { data: [], income: 0, expense: 0 };
-    }
-    acc[formatDate].data.push(record);
-    if (record.type === "IN") {
-      acc[formatDate].income += record.amount;
-    } else {
-      acc[formatDate].expense += record.amount;
-    }
-    return acc;
-  }, {});
-
-  const filtered =
-    mode === "list" ? filterByMonth(groupRecords, currentMonth) : groupRecords;
+  // const { calendarRecords, listRecords } = transformRecords(
+  //   records,
+  //   currentMonth
+  // );
 
   return (
     <Tabs defaultValue="list" className="w-full mt-2 ">
@@ -124,13 +132,13 @@ export default function MainContent({ categories, members }: Props) {
         <>
           <TabsContent value="list">
             <div className="px-3">
-              {records.length === 0 ? (
+              {records.data.length === 0 ? (
                 <p className="text-slate-500 font-bold">
                   沒有資料。點擊右上角新增紀錄。
                 </p>
               ) : (
                 <ListViewTable
-                  groupRecords={filtered}
+                  groupRecords={records.listRecords}
                   categories={categories}
                   members={members}
                 />
@@ -142,7 +150,7 @@ export default function MainContent({ categories, members }: Props) {
               month={currentMonth}
               year={currentYear}
               onMonthChange={handleDateChange}
-              groupRecords={filtered}
+              groupRecords={records.calendarRecords}
               categories={categories}
               members={members}
             />
