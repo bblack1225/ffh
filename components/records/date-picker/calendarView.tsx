@@ -1,17 +1,15 @@
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
-import { RecordQuery } from "@/types/record";
+import { DateState, RecordQuery } from "@/types/record";
 import { formatToYYYYMMDD } from "@/utils/dateUtil";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
 import RecordItem from "../recordItem";
 
 const WEEKDAYS = ["日", "一", "二", "三", "四", "五", "六"];
 
 type Props = {
-  year: number;
-  month: number;
-  onMonthChange: (month: number) => void;
+  currentDate: DateState;
+  onDateChange: (month: number, day: number) => void;
   groupRecords: {
     [key: string]: {
       data: RecordQuery[];
@@ -24,15 +22,14 @@ type Props = {
 };
 
 export default function CalendarView({
-  year,
-  month,
-  onMonthChange,
+  currentDate,
+  onDateChange,
   groupRecords,
   categories,
   members,
 }: Props) {
+  const { year, month, day } = currentDate;
   const daysInMonth = new Date(year, month, 0).getDate();
-  const [currentDay, setCurrentDay] = useState(new Date().getDate());
 
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
   const lastDayOfLastMonth = new Date(year, month - 1, 0).getDate();
@@ -47,26 +44,17 @@ export default function CalendarView({
     (_, i) => i + 1
   );
 
-  useEffect(() => {
-    const lastDayOfMonth = new Date(year, month, 0).getDate();
-    if (currentDay > lastDayOfMonth) {
-      setCurrentDay(lastDayOfMonth);
-    }
-  }, [month, year, currentDay]);
-
   const handleLastMonthDayChange = (day: number) => {
-    onMonthChange(month - 1);
-    setCurrentDay(day);
+    onDateChange(month - 1, day);
   };
 
   const handleNextMonthDayChange = (day: number) => {
-    onMonthChange(month + 1);
-    setCurrentDay(day);
+    onDateChange(month + 1, day);
   };
 
-  const currentDate = formatToYYYYMMDD(year, month, currentDay);
+  const slashFormatDate = formatToYYYYMMDD(year, month, day);
 
-  const records = groupRecords[currentDate] || {
+  const records = groupRecords[slashFormatDate] || {
     data: [],
     income: 0,
     expense: 0,
@@ -105,30 +93,32 @@ export default function CalendarView({
               </div>
             );
           })}
-          {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
-            const formattedDate = formatToYYYYMMDD(year, month, day);
-            const hasRecord = groupRecords[formattedDate];
+          {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(
+            (dayVal) => {
+              const formattedDate = formatToYYYYMMDD(year, month, dayVal);
+              const hasRecord = groupRecords[formattedDate];
 
-            return (
-              <div
-                key={day}
-                className={clsx(
-                  " py-1 flex flex-col items-center font-bold text-gray-800 hover:bg-neutral-200 hover:rounded-lg hover:cursor-pointer",
-                  currentDay === day && "bg-neutral-200 rounded-lg"
-                )}
-                onClick={() => setCurrentDay(day)}
-              >
-                <div>{day}</div>
-
-                <span
+              return (
+                <div
+                  key={dayVal}
                   className={clsx(
-                    "w-1.5 h-1.5 rounded-full",
-                    hasRecord ? "bg-red-400" : "bg-transparent"
+                    " py-1 flex flex-col items-center font-bold text-gray-800 hover:bg-neutral-200 hover:rounded-lg hover:cursor-pointer",
+                    day === dayVal && "bg-neutral-200 rounded-lg"
                   )}
-                />
-              </div>
-            );
-          })}
+                  onClick={() => onDateChange(month, dayVal)}
+                >
+                  <div>{dayVal}</div>
+
+                  <span
+                    className={clsx(
+                      "w-1.5 h-1.5 rounded-full",
+                      hasRecord ? "bg-red-400" : "bg-transparent"
+                    )}
+                  />
+                </div>
+              );
+            }
+          )}
           {daysOfNextMonth.map((day) => {
             const formattedDate = formatToYYYYMMDD(year, month + 1, day);
             const hasRecord = groupRecords[formattedDate];

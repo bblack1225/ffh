@@ -8,3 +8,9 @@ export type RecordQuery = {
   description: string | null;
   type: string;
 };
+
+export type DateState = {
+  year: number;
+  month: number;
+  day: number;
+};

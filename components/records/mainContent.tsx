@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import ListViewTable from "./listTable";
-import { RecordQuery } from "@/types/record";
+import { DateState, RecordQuery } from "@/types/record";
 import { getCalendarRange, parseToDateSlash } from "@/utils/dateUtil";
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
@@ -25,8 +25,8 @@ type Props = {
   members: MemberQuery[];
 };
 
-const fetchSomeData = async (currentYear: number, currentMonth: number) => {
-  const { start, end } = getCalendarRange(currentYear, currentMonth);
+const fetchRecords = async (year: number, month: number) => {
+  const { start, end } = getCalendarRange(year, month);
 
   const res = await fetch(`/api/records?start=${start}&end=${end}`).then(
     (res) => res.json().then((res) => res.data)
@@ -44,8 +44,6 @@ const filterByMonth = (records: GroupRecords, month: number) => {
 };
 
 const transformRecords = (data: RecordQuery[], currentMonth: number) => {
-  console.log("data", data);
-
   const calendarRecords = data.reduce((acc: GroupRecords, record) => {
     const date = record.transaction_date;
     const formatDate = parseToDateSlash(date);
@@ -67,39 +65,52 @@ const transformRecords = (data: RecordQuery[], currentMonth: number) => {
 };
 
 export default function MainContent({ categories, members }: Props) {
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
-  const [mode, setMode] = useState<"list" | "calendar">("list");
-  const handleDateChange = (month: number) => {
+  const [currentDate, setCurrentDate] = useState<DateState>({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    day: new Date().getDate(),
+  });
+  const handleDateChange = (monthVal: number, dayVal?: number) => {
     let newMonth;
     let newYear;
-    if (month > 12) {
+    let newDay = currentDate.day;
+    if (monthVal > 12) {
       newMonth = 1;
-      newYear = currentYear + 1;
-    } else if (month < 1) {
+      newYear = currentDate.year + 1;
+    } else if (monthVal < 1) {
       newMonth = 12;
-      newYear = currentYear - 1;
+      newYear = currentDate.year - 1;
     } else {
-      newMonth = month;
-      newYear = currentYear;
+      newMonth = monthVal;
+      newYear = currentDate.year;
     }
-    setCurrentMonth(newMonth);
-    setCurrentYear(newYear);
 
-    // if (view === "list") {
-    //   setIsDetailShow(false);
-    // }
-    // onDateChange(newYear, newMonth);
+    if (dayVal) {
+      const lastDayOfMonth = new Date(newYear, newMonth, 0).getDate();
+      if (dayVal > lastDayOfMonth) {
+        newDay = lastDayOfMonth;
+      } else {
+        newDay = dayVal;
+      }
+    }
+    setCurrentDate({
+      year: newYear,
+      month: newMonth,
+      day: newDay,
+    });
   };
-  const { start, end } = getCalendarRange(currentYear, currentMonth);
+
+  const handleYearChange = (val: number) => {
+    setCurrentDate((prev) => ({ ...prev, year: val }));
+  };
 
   const {
     data: records = { data: [], listRecords: {}, calendarRecords: {} },
     isPending,
   } = useQuery({
-    queryKey: ["records", currentYear, currentMonth],
-    queryFn: () => fetchSomeData(currentYear, currentMonth),
-    select: (data: RecordQuery[]) => transformRecords(data, currentMonth),
+    queryKey: ["records", currentDate.year, currentDate.month],
+    queryFn: () => fetchRecords(currentDate.year, currentDate.month),
+    select: (data: RecordQuery[]) => transformRecords(data, currentDate.month),
   });
   // const { calendarRecords, listRecords } = transformRecords(
   //   records,
@@ -110,19 +121,14 @@ export default function MainContent({ categories, members }: Props) {
     <Tabs defaultValue="list" className="w-full mt-2 ">
       <div className="px-3">
         <TabsList className="grid w-full grid-cols-2 ">
-          <TabsTrigger value="list" onClick={() => setMode("list")}>
-            清單
-          </TabsTrigger>
-          <TabsTrigger value="calendar" onClick={() => setMode("calendar")}>
-            行事曆
-          </TabsTrigger>
+          <TabsTrigger value="list">清單</TabsTrigger>
+          <TabsTrigger value="calendar">行事曆</TabsTrigger>
         </TabsList>
       </div>
       <DatePickerBar
         onDateChange={handleDateChange}
-        onYearChange={(val) => setCurrentYear(val)}
-        currentMonth={currentMonth}
-        currentYear={currentYear}
+        onYearChange={handleYearChange}
+        currentDate={currentDate}
       />
       {isPending ? (
         <div className="flex justify-center items-center h-50 font-extrabold text-xl">
@@ -147,9 +153,8 @@ export default function MainContent({ categories, members }: Props) {
           </TabsContent>
           <TabsContent value="calendar">
             <CalendarView
-              month={currentMonth}
-              year={currentYear}
-              onMonthChange={handleDateChange}
+              currentDate={currentDate}
+              onDateChange={handleDateChange}
               groupRecords={records.calendarRecords}
               categories={categories}
               members={members}
