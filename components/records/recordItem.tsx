@@ -51,10 +51,12 @@ export default function RecordItem({
         </div>
         {item.type === "IN" ? (
           <div className="bg-[rgb(94,156,115)] rounded-xl px-1">
-            <span className="text-white font-medium">${item.amount}</span>
+            <span className="text-white font-medium">
+              ${item.amount.toLocaleString("en-US")}
+            </span>
           </div>
         ) : (
-          <div className="pr-1">${item.amount}</div>
+          <div className="pr-1">${item.amount.toLocaleString("en-US")}</div>
         )}
       </div>
     </div>

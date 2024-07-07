@@ -140,16 +140,21 @@ export default function CalendarView({
       <div className="border-b-2 border-gray-500 " />
       <div className="flex justify-between  px-3 py-2">
         <div>
-          支出:<span className="text-amber-500">${records.expense}</span>
+          支出:
+          <span className="text-amber-500">
+            ${records.expense.toLocaleString("en-US")}
+          </span>
         </div>
         <div>
           收入:
-          <span className="text-green-600 font-medium">${records.income}</span>
+          <span className="text-green-600 font-medium">
+            ${records.income.toLocaleString("en-US")}
+          </span>
         </div>
         <div>
           合計:
           <span className="text-red-500">
-            ${records.income - records.expense}
+            ${(records.income - records.expense).toLocaleString("en-US")}
           </span>
         </div>
       </div>

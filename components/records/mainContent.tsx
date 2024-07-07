@@ -9,6 +9,7 @@ import { getCalendarRange, parseToDateSlash } from "@/utils/dateUtil";
 import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import CalendarView from "./date-picker/calendarView";
+import ListOverview from "./listOverview";
 
 type RecordGroup = {
   data: RecordQuery[];
@@ -116,6 +117,7 @@ export default function MainContent({ categories, members }: Props) {
   //   records,
   //   currentMonth
   // );
+  console.log("listRecords", records.listRecords);
 
   return (
     <Tabs defaultValue="list" className="w-full mt-2 ">
@@ -138,16 +140,19 @@ export default function MainContent({ categories, members }: Props) {
         <>
           <TabsContent value="list">
             <div className="px-3">
+              <ListOverview />
               {records.data.length === 0 ? (
                 <p className="text-slate-500 font-bold">
                   沒有資料。點擊右上角新增紀錄。
                 </p>
               ) : (
-                <ListViewTable
-                  groupRecords={records.listRecords}
-                  categories={categories}
-                  members={members}
-                />
+                <>
+                  <ListViewTable
+                    groupRecords={records.listRecords}
+                    categories={categories}
+                    members={members}
+                  />
+                </>
               )}
             </div>
           </TabsContent>

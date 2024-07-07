@@ -2,11 +2,9 @@ import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import { RecordQuery } from "@/types/record";
 import { getWeekDay, parseToDateSlash } from "@/utils/dateUtil";
-import { WrenchIcon } from "@heroicons/react/24/outline";
 import RecordItem from "./recordItem";
 
 type Props = {
-  // records: RecordQuery[] | [];
   categories: CategoriesQuery;
   members: MemberQuery[];
   groupRecords: {
@@ -45,10 +43,12 @@ export default function ListViewTable({
             })}
             <div className="flex justify-end px-3 py-2 gap-1">
               <span className="font-medium text-right">
-                收入${records.income} 支出${records.expense}
+                收入${records.income.toLocaleString("en-US")} 支出$
+                {records.expense.toLocaleString("en-US")}
               </span>
               <span className="font-bold text-right underline underline-offset-4">
-                合計${records.income - records.expense}
+                合計$
+                {(records.income - records.expense).toLocaleString("en-US")}
               </span>
             </div>
           </div>
