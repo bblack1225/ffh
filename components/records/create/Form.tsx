@@ -36,7 +36,7 @@ export default function Form({ categories, members, type }: Props) {
 
   return (
     <form action={dispatch}>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
+      <div className="rounded-md bg-card p-4 md:p-6">
         <div className="flex flex-col gap-4">
           <div>
             <label
@@ -51,7 +51,7 @@ export default function Form({ categories, members, type }: Props) {
               type="date"
               name="date"
               id="date"
-              className="mt-1 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 text-xl  sm:text-lg"
+              className="mt-1 px-3 border border-gray-300 bg-background rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 text-xl  sm:text-lg"
               style={{
                 width: "100%",
                 minWidth: "intrinsic",

@@ -9,7 +9,7 @@ export default async function Page() {
   const { inCategories, outCategories } = await fetchAllCategories();
 
   return (
-    <div className="bg-background">
+    <div className="bg-background px-3">
       <Tabs defaultValue="expense">
         <div className="flex items-center justify-between">
           <div className="flex flex-1">
