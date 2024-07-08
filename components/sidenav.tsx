@@ -37,7 +37,7 @@ export default function SideNav() {
       </div>
       <div
         className={clsx(
-          "flex grow justify-between flex-col md:space-x-0 md:space-y-2 transition-all ease-in-out duration-300 overflow-hidden",
+          "flex grow justify-between flex-col md:space-x-0  transition-all ease-in-out duration-300 overflow-hidden",
           { "h-0": !isNavShow, "h-auto": isNavShow }
         )}
       >
