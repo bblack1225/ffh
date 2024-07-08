@@ -3,17 +3,12 @@ import { MemberQuery } from "@/types/member";
 import { RecordQuery } from "@/types/record";
 import { getWeekDay, parseToDateSlash } from "@/utils/dateUtil";
 import RecordItem from "./recordItem";
+import { GroupRecords, MonthRecords } from "./mainContent";
 
 type Props = {
   categories: CategoriesQuery;
   members: MemberQuery[];
-  groupRecords: {
-    [key: string]: {
-      data: RecordQuery[];
-      income: number;
-      expense: number;
-    };
-  };
+  groupRecords: GroupRecords;
 };
 
 export default function ListViewTable({

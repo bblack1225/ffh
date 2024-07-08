@@ -17,7 +17,13 @@ type RecordGroup = {
   expense: number;
 };
 
-type GroupRecords = {
+export type MonthRecords = {
+  records: GroupRecords;
+  income: number;
+  expense: number;
+};
+
+export type GroupRecords = {
   [key: string]: RecordGroup;
 };
 
@@ -35,13 +41,19 @@ const fetchRecords = async (year: number, month: number) => {
   return res;
 };
 
-const filterByMonth = (records: GroupRecords, month: number) => {
-  return Object.keys(records)
+const filterByMonth = (groupRecords: GroupRecords, month: number) => {
+  return Object.keys(groupRecords)
     .filter((date) => new Date(date).getMonth() + 1 === month)
-    .reduce((obj: GroupRecords, key) => {
-      obj[key] = records[key];
-      return obj;
-    }, {});
+    .reduce(
+      (obj: MonthRecords, key) => {
+        const record = groupRecords[key];
+        obj.records[key] = groupRecords[key];
+        obj.income += record.income;
+        obj.expense += record.expense;
+        return obj;
+      },
+      { records: {}, income: 0, expense: 0 }
+    );
 };
 
 const transformRecords = (data: RecordQuery[], currentMonth: number) => {
@@ -106,7 +118,11 @@ export default function MainContent({ categories, members }: Props) {
   };
 
   const {
-    data: records = { data: [], listRecords: {}, calendarRecords: {} },
+    data: records = {
+      data: [],
+      listRecords: { records: {}, income: 0, expense: 0 },
+      calendarRecords: {},
+    },
     isPending,
   } = useQuery({
     queryKey: ["records", currentDate.year, currentDate.month],
@@ -117,7 +133,6 @@ export default function MainContent({ categories, members }: Props) {
   //   records,
   //   currentMonth
   // );
-  console.log("listRecords", records.listRecords);
 
   return (
     <Tabs defaultValue="list" className="w-full mt-2 ">
@@ -140,7 +155,10 @@ export default function MainContent({ categories, members }: Props) {
         <>
           <TabsContent value="list">
             <div className="px-3">
-              <ListOverview />
+              <ListOverview
+                income={records.listRecords.income}
+                expense={records.listRecords.expense}
+              />
               {records.data.length === 0 ? (
                 <p className="text-slate-500 font-bold">
                   沒有資料。點擊右上角新增紀錄。
@@ -148,7 +166,7 @@ export default function MainContent({ categories, members }: Props) {
               ) : (
                 <>
                   <ListViewTable
-                    groupRecords={records.listRecords}
+                    groupRecords={records.listRecords.records}
                     categories={categories}
                     members={members}
                   />

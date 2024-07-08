@@ -1,8 +1,11 @@
 import clsx from "clsx";
 
-export default function ListOverview() {
-  const income = 1000;
-  const expense = 2000;
+type Props = {
+  income: number;
+  expense: number;
+};
+
+export default function ListOverview({ income, expense }: Props) {
   const total = income - expense;
   return (
     <div className="flex justify-between bg-background pb-2">
