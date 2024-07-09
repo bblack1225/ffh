@@ -14,6 +14,8 @@ import { createRecord, State } from "@/lib/records/action";
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import SubmitButton from "../../submitButton";
+import { Drawer } from "@/components/ui/drawer";
+import { ChevronRight } from "lucide-react";
 
 type Props = {
   categories: CategoryTable[];
@@ -76,6 +78,26 @@ export default function Form({ categories, members, type }: Props) {
             >
               {type === "IN" ? "收入類別" : "支出類別"}
             </label>
+            <div className="relative">
+              <ChevronRight className="absolute right-2 top-2 " />
+              <Input
+                className=""
+                name="category"
+                placeholder={type === "IN" ? "選擇收入類別" : "選擇支出類別"}
+                type="text"
+                readOnly
+                onClick={() => console.log("click")}
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="category"
+              className="text-xl sm:text-lg font-medium"
+            >
+              {type === "IN" ? "收入類別" : "支出類別"}
+            </label>
+
             <Select name="category">
               <SelectGroup className="mt-1">
                 <SelectTrigger id="category">
