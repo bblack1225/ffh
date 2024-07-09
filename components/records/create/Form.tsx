@@ -14,8 +14,9 @@ import { createRecord, State } from "@/lib/records/action";
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import SubmitButton from "../../submitButton";
-import { Drawer } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { ChevronRight } from "lucide-react";
+import { useState } from "react";
 
 type Props = {
   categories: CategoryTable[];
@@ -23,12 +24,15 @@ type Props = {
   type: "IN" | "OUT";
 };
 
+const MOCK_CATEGORIES = [];
+
 export default function Form({ categories, members, type }: Props) {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState<State, FormData>(
     (state, formData) => createRecord(state, formData, type),
     initialState
   );
+  const [selectedCategoryName, setSelectedCategoryName] = useState("");
 
   // const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   //   if (!e.target.files) return;
@@ -78,16 +82,37 @@ export default function Form({ categories, members, type }: Props) {
             >
               {type === "IN" ? "收入類別" : "支出類別"}
             </label>
-            <div className="relative">
-              <ChevronRight className="absolute right-2 top-2 " />
-              <Input
-                className=""
-                name="category"
-                placeholder={type === "IN" ? "選擇收入類別" : "選擇支出類別"}
-                type="text"
-                readOnly
-                onClick={() => console.log("click")}
-              />
+            <div>
+              <Drawer>
+                <DrawerTrigger className="w-full">
+                  <div className="relative">
+                    <ChevronRight className="absolute right-2 top-2 " />
+                    <Input
+                      className="focus-visible:ring-0 focus:bg-slate-300 w-full"
+                      name="category"
+                      placeholder={
+                        type === "IN" ? "選擇收入類別" : "選擇支出類別"
+                      }
+                      type="text"
+                      readOnly
+                      value={selectedCategoryName}
+                    />
+                  </div>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <div className="grid grid-cols-3 gap-3 p-3">
+                    {categories.map((category) => (
+                      <div
+                        key={category.id}
+                        className="bg-card flex justify-center items-center p-4 rounded-md text-sm font-bold"
+                        onClick={() => setSelectedCategoryName(category.name)}
+                      >
+                        {category.name}
+                      </div>
+                    ))}
+                  </div>
+                </DrawerContent>
+              </Drawer>
             </div>
           </div>
           <div>
