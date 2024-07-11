@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { RefreshCw } from "lucide-react";
 import { useFormStatus } from "react-dom";
 
 type Props = {
@@ -11,7 +11,7 @@ export default function SubmitButton({ text }: Props) {
 
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? <ArrowPathIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
+      {pending ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : null}
       {text}
     </Button>
   );

@@ -14,17 +14,16 @@ import { createRecord, State } from "@/lib/records/action";
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import SubmitButton from "../../submitButton";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import Icon from "../icon";
 
 type Props = {
   categories: CategoryTable[];
   members: MemberTable[];
   type: "IN" | "OUT";
 };
-
-const MOCK_CATEGORIES = [];
 
 export default function Form({ categories, members, type }: Props) {
   const initialState = { message: null, errors: {} };
@@ -33,6 +32,7 @@ export default function Form({ categories, members, type }: Props) {
     initialState
   );
   const [selectedCategoryName, setSelectedCategoryName] = useState("");
+  const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false);
 
   // const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   //   if (!e.target.files) return;
@@ -83,36 +83,42 @@ export default function Form({ categories, members, type }: Props) {
               {type === "IN" ? "收入類別" : "支出類別"}
             </label>
             <div>
-              <Drawer>
-                <DrawerTrigger className="w-full">
-                  <div className="relative">
-                    <ChevronRight className="absolute right-2 top-2 " />
-                    <Input
-                      className="focus-visible:ring-0 focus:bg-slate-300 w-full"
-                      name="category"
-                      placeholder={
-                        type === "IN" ? "選擇收入類別" : "選擇支出類別"
-                      }
-                      type="text"
-                      readOnly
-                      value={selectedCategoryName}
-                    />
-                  </div>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <div className="grid grid-cols-3 gap-3 p-3">
+              <div className="relative">
+                <ChevronRight className="absolute right-2 top-2 " />
+                <Input
+                  className="focus-visible:ring-0 focus:bg-slate-300 w-full"
+                  name="category"
+                  placeholder={type === "IN" ? "選擇收入類別" : "選擇支出類別"}
+                  type="text"
+                  readOnly
+                  value={selectedCategoryName}
+                  onClick={() => setIsCategoryDrawerOpen(true)}
+                />
+              </div>
+              <Dialog
+                open={isCategoryDrawerOpen}
+                onOpenChange={setIsCategoryDrawerOpen}
+              >
+                <DialogContent className="h-screen w-screen">
+                  <div className="h-fit grid grid-cols-3 gap-4  overflow-auto py-2 px-1">
                     {categories.map((category) => (
                       <div
                         key={category.id}
-                        className="bg-card flex justify-center items-center p-4 rounded-md text-sm font-bold"
-                        onClick={() => setSelectedCategoryName(category.name)}
+                        className="h-20 bg-card flex flex-col justify-center items-center  rounded-md text-sm font-bold"
+                        onClick={() => {
+                          setSelectedCategoryName(category.name);
+                          setIsCategoryDrawerOpen(false);
+                        }}
                       >
-                        {category.name}
+                        <div>
+                          <Icon name={category.icon} />
+                        </div>
+                        <div>{category.name}</div>
                       </div>
                     ))}
                   </div>
-                </DrawerContent>
-              </Drawer>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div>

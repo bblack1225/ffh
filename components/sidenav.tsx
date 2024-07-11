@@ -1,15 +1,11 @@
 "use client";
 import Link from "next/link";
 import NavLinks from "./nav-links";
-import {
-  Bars4Icon,
-  CurrencyDollarIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import { Menu, Receipt, X } from "lucide-react";
 
 export default function SideNav() {
   const [isNavShow, setIsNavLinkShow] = useState(false);
@@ -22,15 +18,15 @@ export default function SideNav() {
         <div className="flex justify-center items-center md:hidden">
           <Button size="icon" onClick={() => setIsNavLinkShow((prev) => !prev)}>
             {isNavShow ? (
-              <XMarkIcon className="w-10 h-10" />
+              <X className="w-10 h-10" />
             ) : (
-              <Bars4Icon className="w-10 h-10" />
+              <Menu className="w-10 h-10" />
             )}
           </Button>
         </div>
         <div>
           <Link href="/" className="text-white flex items-center leading-none">
-            <CurrencyDollarIcon className="w-10 h-10 rotate-[15deg]" />
+            <Receipt className="w-10 h-10 rotate-[15deg]" />
             <p className="text-[24px] hidden md:block">家庭記帳本</p>
           </Link>
         </div>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 const MONTHS = [
   {

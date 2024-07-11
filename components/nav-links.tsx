@@ -1,19 +1,14 @@
 "use client";
-import {
-  ChatBubbleOvalLeftEllipsisIcon,
-  DocumentDuplicateIcon,
-  HomeIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
 import clsx from "clsx";
+import { MessageCircleMore, NotebookPen, Users, House } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { name: "概觀", href: "/overview", icon: HomeIcon },
-  { name: "成員", href: "/members", icon: UserGroupIcon },
-  { name: "收支紀錄", href: "/records", icon: DocumentDuplicateIcon },
-  { name: "留言板", href: "/comments", icon: ChatBubbleOvalLeftEllipsisIcon },
+  { name: "概觀", href: "/overview", icon: House },
+  { name: "成員", href: "/members", icon: Users },
+  { name: "收支紀錄", href: "/records", icon: NotebookPen },
+  { name: "留言板", href: "/comments", icon: MessageCircleMore },
 ];
 export default function NavLinks() {
   const pathname = usePathname();

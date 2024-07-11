@@ -1,10 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { useState } from "react";
 import DatePickerListView from "./dataPickerListView";
 import { DateState } from "@/types/record";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 type Props = {
   onDateChange: (month: number) => void;
