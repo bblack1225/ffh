@@ -100,7 +100,7 @@ export default function Form({ categories, members, type }: Props) {
                 onOpenChange={setIsCategoryDrawerOpen}
               >
                 <DialogContent className="h-screen w-screen">
-                  <div className="h-fit grid grid-cols-3 gap-4  overflow-auto py-2 px-1">
+                  <div className="h-fit grid grid-cols-3 gap-4  overflow-auto py-4 px-1">
                     {categories.map((category) => (
                       <div
                         key={category.id}
@@ -129,7 +129,7 @@ export default function Form({ categories, members, type }: Props) {
               {type === "IN" ? "收入類別" : "支出類別"}
             </label>
 
-            <Select name="category">
+            {/* <Select name="category">
               <SelectGroup className="mt-1">
                 <SelectTrigger id="category">
                   <SelectValue
@@ -146,7 +146,7 @@ export default function Form({ categories, members, type }: Props) {
                   ))}
                 </SelectContent>
               </SelectGroup>
-            </Select>
+            </Select> */}
             <div id="category-error" aria-live="polite" aria-atomic="true">
               {state.errors?.category &&
                 state.errors.category.map((error: string) => (
