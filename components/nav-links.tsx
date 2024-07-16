@@ -2,7 +2,7 @@
 import clsx from "clsx";
 import { MessageCircleMore, NotebookPen, Users, House } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const links = [
   { name: "概觀", href: "/overview", icon: House },
@@ -10,8 +10,14 @@ const links = [
   { name: "收支紀錄", href: "/records", icon: NotebookPen },
   { name: "留言板", href: "/comments", icon: MessageCircleMore },
 ];
-export default function NavLinks() {
+
+type Props = {
+  onNavChange: (isShow: boolean) => void;
+};
+
+export default function NavLinks({ onNavChange }: Props) {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <>
@@ -27,6 +33,10 @@ export default function NavLinks() {
                 ? "bg-gray-200 text-black"
                 : "bg-gray-50 text-slate-500"
             )}
+            onClick={() => {
+              router.push(link.href.toString());
+              onNavChange(false);
+            }}
           >
             <LinkIcon className="w-6 hidden md:block" />
             <p>{link.name}</p>

@@ -4,13 +4,10 @@ import NavLinks from "./nav-links";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
 import { Menu, Receipt, X } from "lucide-react";
 
 export default function SideNav() {
   const [isNavShow, setIsNavLinkShow] = useState(false);
-  const test = useRouter();
-  console.log("asPath", test);
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
@@ -37,7 +34,7 @@ export default function SideNav() {
           { "h-0": !isNavShow, "h-auto": isNavShow }
         )}
       >
-        <NavLinks />
+        <NavLinks onNavChange={setIsNavLinkShow} />
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
       </div>
     </div>
