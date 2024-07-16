@@ -16,8 +16,14 @@ import { useFormState } from "react-dom";
 import SubmitButton from "../../submitButton";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Icon from "../icon";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 type Props = {
   categories: CategoryTable[];
@@ -100,11 +106,17 @@ export default function Form({ categories, members, type }: Props) {
                 onOpenChange={setIsCategoryDrawerOpen}
               >
                 <DialogContent className="h-screen w-screen">
+                  <VisuallyHidden.Root>
+                    <DialogTitle />
+                  </VisuallyHidden.Root>
+                  <VisuallyHidden.Root>
+                    <DialogDescription />
+                  </VisuallyHidden.Root>
                   <div className="h-fit grid grid-cols-3 gap-4  overflow-auto py-4 px-1">
                     {categories.map((category) => (
                       <div
                         key={category.id}
-                        className="h-20 bg-card flex flex-col justify-center items-center  rounded-md text-sm font-bold"
+                        className="h-20 bg-card flex flex-col justify-center items-center  rounded-md text-sm font-bold cursor-pointer"
                         onClick={() => {
                           setSelectedCategoryName(category.name);
                           setIsCategoryDrawerOpen(false);
@@ -128,25 +140,6 @@ export default function Form({ categories, members, type }: Props) {
             >
               {type === "IN" ? "收入類別" : "支出類別"}
             </label>
-
-            {/* <Select name="category">
-              <SelectGroup className="mt-1">
-                <SelectTrigger id="category">
-                  <SelectValue
-                    placeholder={
-                      type === "IN" ? "選擇收入類別" : "選擇支出類別"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </SelectGroup>
-            </Select> */}
             <div id="category-error" aria-live="polite" aria-atomic="true">
               {state.errors?.category &&
                 state.errors.category.map((error: string) => (
