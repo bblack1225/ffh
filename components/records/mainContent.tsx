@@ -86,7 +86,7 @@ export default function MainContent({ categories, members }: Props) {
   const handleDateChange = (monthVal: number, dayVal?: number) => {
     let newMonth;
     let newYear;
-    let newDay = currentDate.day;
+    let newDay = dayVal ? dayVal : currentDate.day;
     if (monthVal > 12) {
       newMonth = 1;
       newYear = currentDate.year + 1;
@@ -97,15 +97,12 @@ export default function MainContent({ categories, members }: Props) {
       newMonth = monthVal;
       newYear = currentDate.year;
     }
+    const lastDayOfMonth = new Date(newYear, newMonth, 0).getDate();
 
-    if (dayVal) {
-      const lastDayOfMonth = new Date(newYear, newMonth, 0).getDate();
-      if (dayVal > lastDayOfMonth) {
-        newDay = lastDayOfMonth;
-      } else {
-        newDay = dayVal;
-      }
+    if (newDay > lastDayOfMonth) {
+      newDay = lastDayOfMonth;
     }
+
     setCurrentDate({
       year: newYear,
       month: newMonth,
