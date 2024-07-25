@@ -16,29 +16,46 @@ import { useFormState } from "react-dom";
 import SubmitButton from "../../submitButton";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import Icon from "../icon";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import CategoryDialog from "../categoryDialog";
 
 type Props = {
   categories: CategoryTable[];
   members: MemberTable[];
   type: "IN" | "OUT";
+  formAction: (formData: FormData) => void;
+  state: State;
 };
 
-export default function Form({ categories, members, type }: Props) {
-  const initialState = { message: null, errors: {} };
-  const [state, dispatch] = useFormState<State, FormData>(
-    (state, formData) => createRecord(state, formData, type),
-    initialState
-  );
-  const [selectedCategoryName, setSelectedCategoryName] = useState("");
+export default function Form({
+  categories,
+  members,
+  type,
+  formAction,
+  state,
+}: Props) {
+  // const initialState = { message: null, errors: {} };
+  // const [state, dispatch] = useFormState<State, FormData>((state, formData) => {
+  //   formData.set("category", selectedCategory.id);
+  //   return createRecord(state, formData, type);
+  // }, initialState);
+  const [selectedCategory, setSelectedCategory] = useState({
+    name: "",
+    id: "",
+  });
+  const handleSubmit = (formData: FormData) => {
+    formData.set("category", selectedCategory.id);
+    formAction(formData);
+  };
+
   const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false);
+
+  const handleCategorySelect = (category: CategoryTable) => {
+    setSelectedCategory({
+      id: category.id,
+      name: category.name,
+    });
+    setIsCategoryDrawerOpen(false);
+  };
 
   // const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   //   if (!e.target.files) return;
@@ -47,7 +64,7 @@ export default function Form({ categories, members, type }: Props) {
   // };
 
   return (
-    <form action={dispatch}>
+    <form action={handleSubmit}>
       <div className="rounded-md bg-card p-4 md:p-6">
         <div className="flex flex-col gap-4">
           <div>
@@ -94,62 +111,31 @@ export default function Form({ categories, members, type }: Props) {
                 <Input
                   className="focus-visible:ring-0 focus:bg-slate-300 w-full"
                   name="category"
+                  id="category"
                   placeholder={type === "IN" ? "選擇收入類別" : "選擇支出類別"}
                   type="text"
                   readOnly
-                  value={selectedCategoryName}
+                  value={selectedCategory.name}
                   onClick={() => setIsCategoryDrawerOpen(true)}
                 />
               </div>
-              <Dialog
+              <CategoryDialog
                 open={isCategoryDrawerOpen}
-                onOpenChange={setIsCategoryDrawerOpen}
-              >
-                <DialogContent className="h-screen w-screen">
-                  <VisuallyHidden.Root>
-                    <DialogTitle />
-                  </VisuallyHidden.Root>
-                  <VisuallyHidden.Root>
-                    <DialogDescription />
-                  </VisuallyHidden.Root>
-                  <div className="h-fit grid grid-cols-3 gap-4  overflow-auto py-4 px-1">
-                    {categories.map((category) => (
-                      <div
-                        key={category.id}
-                        className="h-20 bg-card flex flex-col justify-center items-center  rounded-md text-sm font-bold cursor-pointer"
-                        onClick={() => {
-                          setSelectedCategoryName(category.name);
-                          setIsCategoryDrawerOpen(false);
-                        }}
-                      >
-                        <div>
-                          <Icon name={category.icon} />
-                        </div>
-                        <div>{category.name}</div>
-                      </div>
-                    ))}
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="category"
-              className="text-xl sm:text-lg font-medium"
-            >
-              {type === "IN" ? "收入類別" : "支出類別"}
-            </label>
-            <div id="category-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.category &&
-                state.errors.category.map((error: string) => (
-                  <p
-                    className="mt-2 text-sm text-red-500 font-bold"
-                    key={error}
-                  >
-                    {error}
-                  </p>
-                ))}
+                onClose={setIsCategoryDrawerOpen}
+                categories={categories}
+                onSelectCategory={handleCategorySelect}
+              />
+              <div id="category-error" aria-live="polite" aria-atomic="true">
+                {state.errors?.category &&
+                  state.errors.category.map((error: string) => (
+                    <p
+                      className="mt-2 text-sm text-red-500 font-bold"
+                      key={error}
+                    >
+                      {error}
+                    </p>
+                  ))}
+              </div>
             </div>
           </div>
           <div>

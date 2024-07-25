@@ -1,5 +1,6 @@
 import Form from "@/components/records/create/Form";
 import ExpenseCreateForm from "@/components/records/create/Form";
+import CreateForm from "@/components/records/createForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { fetchAllCategories } from "@/lib/category/data";
 import { fetchAllMembers } from "@/lib/members/data";
@@ -25,10 +26,10 @@ export default async function Page() {
           </TabsList>
         </div>
         <TabsContent value="income">
-          <Form categories={inCategories} members={members} type="IN" />
+          <CreateForm categories={inCategories} members={members} type="IN" />
         </TabsContent>
         <TabsContent value="expense">
-          <Form categories={outCategories} members={members} type="OUT" />
+          <CreateForm categories={outCategories} members={members} type="OUT" />
         </TabsContent>
       </Tabs>
     </div>

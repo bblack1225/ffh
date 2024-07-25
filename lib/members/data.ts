@@ -18,6 +18,5 @@ const db = drizzle(xata);
 
 export async function fetchAllMembers() {
   const record = await db.select().from(member).execute();
-  console.log("record", record);
   return record;
 }

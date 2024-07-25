@@ -6,7 +6,7 @@ export type RecordQuery = {
   member_id: string;
   book_id: string;
   description: string | null;
-  type: string;
+  type: "IN" | "OUT";
 };
 
 export type DateState = {

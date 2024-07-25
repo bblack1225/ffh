@@ -17,6 +17,5 @@ const db = drizzle(xata);
 
 export async function fetchAllComments() {
   const record = await db.select().from(comments).execute();
-  console.log("record", record);
   return record;
 }
