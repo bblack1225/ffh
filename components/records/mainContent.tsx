@@ -10,6 +10,8 @@ import { CategoriesQuery } from "@/types/category";
 import { MemberQuery } from "@/types/member";
 import CalendarView from "./date-picker/calendarView";
 import ListOverview from "./listOverview";
+import { JSONData } from "@xata.io/client";
+import { TransactionRecord, TransactionRecordRecord } from "@/utils/xata";
 
 type RecordGroup = {
   data: RecordQuery[];
@@ -32,13 +34,15 @@ type Props = {
   members: MemberQuery[];
 };
 
+export type RecordsSdkType = JSONData<TransactionRecordRecord>;
+
 const fetchRecords = async (year: number, month: number) => {
   const { start, end } = getCalendarRange(year, month);
 
   const res = await fetch(`/api/records?start=${start}&end=${end}`).then(
     (res) => res.json().then((res) => res.data)
   );
-  return res;
+  return res as RecordsSdkType[];
 };
 
 const filterByMonth = (groupRecords: GroupRecords, month: number) => {
@@ -56,9 +60,9 @@ const filterByMonth = (groupRecords: GroupRecords, month: number) => {
     );
 };
 
-const transformRecords = (data: RecordQuery[], currentMonth: number) => {
+const transformRecords = (data: RecordsSdkType[], currentMonth: number) => {
   const calendarRecords = data.reduce((acc: GroupRecords, record) => {
-    const date = record.transaction_date;
+    const date = record.transaction_date as string;
     const formatDate = parseToDateSlash(date);
 
     if (!acc[formatDate]) {
@@ -124,7 +128,8 @@ export default function MainContent({ categories, members }: Props) {
   } = useQuery({
     queryKey: ["records", currentDate.year, currentDate.month],
     queryFn: () => fetchRecords(currentDate.year, currentDate.month),
-    select: (data: RecordQuery[]) => transformRecords(data, currentDate.month),
+    select: (data: RecordsSdkType[]) =>
+      transformRecords(data, currentDate.month),
   });
   // const { calendarRecords, listRecords } = transformRecords(
   //   records,
@@ -156,7 +161,7 @@ export default function MainContent({ categories, members }: Props) {
                 income={records.listRecords.income}
                 expense={records.listRecords.expense}
               />
-              {records.data.length === 0 ? (
+              {Object.keys(records.listRecords.records).length === 0 ? (
                 <p className="text-slate-500 font-bold">
                   沒有資料。點擊右上角新增紀錄。
                 </p>

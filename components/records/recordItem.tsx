@@ -24,6 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
+import EditForm from "./editForm";
 
 type Props = {
   item: RecordQuery;
@@ -146,11 +147,11 @@ export default function RecordItem({
               <Trash2 />
             </Button>
           </SheetHeader>
-          {/* <Form
-            categories={selectedCategories}
+          <EditForm
+            item={item}
+            categories={item.type === "IN" ? inCategories : outCategories}
             members={members}
-            type={item.type}
-          /> */}
+          />
         </SheetContent>
       </Sheet>
     </>

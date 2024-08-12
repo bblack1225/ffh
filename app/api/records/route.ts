@@ -1,4 +1,4 @@
-import { fetchRecordsByMonth } from "@/lib/records/data";
+import { fetchRecordsByMonth, fetchRecordsByMonth2 } from "@/lib/records/data";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -6,6 +6,6 @@ export async function GET(request: NextRequest) {
   const startQuery = searchParams.get("start");
   const endQuery = searchParams.get("end");
 
-  const records = await fetchRecordsByMonth(startQuery, endQuery);
+  const records = await fetchRecordsByMonth2(startQuery, endQuery);
   return Response.json({ data: records });
 }

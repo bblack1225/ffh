@@ -1,7 +1,7 @@
 import MainContent from "@/components/records/mainContent";
 import { fetchAllCategories } from "@/lib/category/data";
 import { fetchAllMembers } from "@/lib/members/data";
-import { fetchRecordsByMonth } from "@/lib/records/data";
+import { fetchRecordsByMonth, fetchRecordsByMonth2 } from "@/lib/records/data";
 import {
   dehydrate,
   HydrationBoundary,
@@ -13,7 +13,7 @@ export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["records"],
-    queryFn: () => fetchRecordsByMonth(),
+    queryFn: () => fetchRecordsByMonth2(),
   });
   const categories = await fetchAllCategories();
   const members = await fetchAllMembers();

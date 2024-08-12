@@ -70,6 +70,47 @@ export async function fetchRecordsByMonth(
       )
     )
     .orderBy(asc(transaction_record.transaction_date));
+  console.log("records", records);
+
+  return records;
+}
+
+export async function fetchRecordsByMonth2(
+  start?: string | null,
+  end?: string | null
+) {
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth() + 1;
+
+  let startDate;
+  let endDate;
+  if (start && end) {
+    startDate = start;
+    endDate = end;
+  } else {
+    const { start: startRange, end: endRange } = getCalendarRange(year, month);
+    startDate = startRange;
+    endDate = endRange;
+  }
+
+  const data = await xata.db.transaction_record
+    .filter({
+      $all: [
+        {
+          id: "rec_cqsoj9ndjp8e3j9aapqg",
+        },
+        {
+          transaction_date: {
+            $ge: new Date(startDate),
+            $le: new Date(endDate),
+          },
+        },
+      ],
+    })
+    .sort("transaction_date", "asc")
+    .getMany();
+  const records = data.toSerializable();
+  console.log("records", records);
 
   return records;
 }
